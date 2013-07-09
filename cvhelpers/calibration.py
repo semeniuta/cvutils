@@ -1,5 +1,33 @@
 import cv2
 import numpy as np
+from cvhelpers import images as cvhimages
+
+def calibrate_camera(image_names, pattern_shape, square_size):
+    '''
+    returns: rms, camera_matrix, dist_coefs, rvecs, tvecs
+    '''    
+    pattern_points = get_pattern_points(pattern_shape, square_size)
+    object_points = []
+    image_points = []
+    
+    for image_file in image_names:
+        img = cvhimages.open_image(image_file)
+        h, w = img.shape
+        found, corners = cv2.findChessboardCorners(img, pattern_shape)       
+        
+        if not found:
+            print 'Chessboard not found on %s' % image_file
+            continue
+        
+        if found:
+            term = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1)
+            cv2.cornerSubPix(img, corners, (5, 5), (-1, -1), term)           
+        
+        image_points.append(corners.reshape(-1, 2))
+        object_points.append(pattern_points)
+        
+    res = cv2.calibrateCamera(object_points, image_points, (w, h))
+    return res
 
 def find_chessboard_corners(image, pattern_size):
     return cv2.findChessboardCorners(image, pattern_size)
