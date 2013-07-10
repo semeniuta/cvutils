@@ -1,16 +1,15 @@
-from glob import glob
 from cvhelpers import calibration
 from cvhelpers import images
 import random
 import numpy as np
 import cv2
 
-first_four = (r'D:\Dropbox\SINTEF\img\first_four\*_0.bmp', (7, 7), 2.9)
-opencv_sample = (r'D:\Dropbox\SINTEF\img\opencv_sample\left*.jpg', (9, 6), 1.0)
-new_set_1 = (r'D:\Dropbox\SINTEF\img\Camera1-1\*.bmp', (8, 7), 2.9)
-new_set_2 = (r'D:\Dropbox\SINTEF\img\Camera2-1\*.bmp', (8, 7), 2.9)
+first_four = (r'D:\Dropbox\SINTEF\img\first_four\*_0.bmp', (7, 7), 2.9, 'data/first_four.pickle')
+opencv_sample = (r'D:\Dropbox\SINTEF\img\opencv_sample\left*.jpg', (9, 6), 1.0, 'data/opencv_sample.pickle')
+new_set_1 = (r'D:\Dropbox\SINTEF\img\Camera1-1\*.bmp', (8, 7), 2.9, 'data/new_set_1.pickle')
+new_set_2 = (r'D:\Dropbox\SINTEF\img\Camera2-1\*.bmp', (8, 7), 2.9, 'data/new_set_2.pickle')
 
-images_mask, pattern_size, square_size = new_set_1
+images_mask, pattern_size, square_size, data_file = new_set_2
 
 ''' Find chessboard corners on all images '''
 opened_images = images.open_images_from_mask(images_mask)
@@ -32,7 +31,7 @@ camera_matrix = res[1]
 print 'All images:'
 print camera_matrix
 
-''' Samples testing '''
+''' Samples testing ''' 
 sample_size = 30
 num_of_tests = 3
 num_of_images_total = len(filtered_images)
