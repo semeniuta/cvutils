@@ -10,13 +10,15 @@ def calibrate_camera(image_names, pattern_shape, square_size):
     object_points = []
     image_points = []
     
-    for image_file in image_names:
+    failures_indices = []
+    for current_index in range(len(image_names)):
+        image_file = image_names[current_index]        
         img = cvhimages.open_image(image_file)
         h, w = img.shape
         found, corners = cv2.findChessboardCorners(img, pattern_shape)       
         
         if not found:
-            print 'Chessboard not found on %s' % image_file
+            failures_indices.append(current_index)
             continue
         
         if found:
@@ -27,7 +29,7 @@ def calibrate_camera(image_names, pattern_shape, square_size):
         object_points.append(pattern_points)
         
     res = cv2.calibrateCamera(object_points, image_points, (w, h))
-    return res
+    return (res, failures_indices)
 
 def find_chessboard_corners(image, pattern_size):
     return cv2.findChessboardCorners(image, pattern_size)

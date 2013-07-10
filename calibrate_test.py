@@ -15,11 +15,11 @@ images_mask, pattern_shape, square_size = new_set_1
 image_names = glob(images_mask)
 
 sample_size = 30
-num_of_tests = 20
-num_of_images_total = len(image_names) - 1
+num_of_tests = 3
+num_of_images_total = len(image_names)
 tests = []
 for i in range(num_of_tests):
-    sample = [random.randint(0, num_of_images_total) for j in range(sample_size)]
+    sample = [random.randint(0, num_of_images_total - 1) for j in range(sample_size)]
     tests.append(sample)
     
 camera_matrices = []
@@ -27,7 +27,8 @@ for t in tests:
     sample_images = [image_names[el] for el in t]
     
     print 'Calibration sample %s using cvhelpers.calibration' % t
-    res = calibration.calibrate_camera(sample_images, pattern_shape, square_size)
+    res, failures = calibration.calibrate_camera(sample_images, pattern_shape, square_size)
+    print failures
     camera_matrix = res[1]
     print camera_matrix    
     
