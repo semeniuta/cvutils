@@ -12,4 +12,6 @@ num_of_tests = 200
 
 images_mask, pattern_size, square_size, data_file = new_set_1
 
-calexp.different_samples_experiment(images_mask, pattern_size, square_size, data_file, sample_size, num_of_tests)
+results_dir = 'D:\Dropbox\SINTEF\experiments'
+
+calexp.different_samples_experiment(images_mask, pattern_size, square_size, data_file, sample_size, num_of_tests, results_dir)
