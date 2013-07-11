@@ -31,37 +31,6 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
         
     res = cv2.calibrateCamera(object_points, image_points, (w, h))
     return res
-
-
-def calibrate_camera_old(image_names, pattern_size, square_size):
-    '''
-    todo
-    returns: rms, camera_matrix, dist_coefs, rvecs, tvecs
-    '''    
-    pattern_points = get_pattern_points(pattern_size, square_size)
-    object_points = []
-    image_points = []
-    
-    failures_indices = []
-    for current_index in range(len(image_names)):
-        image_file = image_names[current_index]        
-        img = cvhimages.open_image(image_file)
-        h, w = img.shape
-        found, corners = cv2.findChessboardCorners(img, pattern_size)       
-        
-        if not found:
-            failures_indices.append(current_index)
-            continue
-        
-        if found:
-            term = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1)
-            cv2.cornerSubPix(img, corners, (5, 5), (-1, -1), term)           
-        
-        image_points.append(corners.reshape(-1, 2))
-        object_points.append(pattern_points)
-        
-    res = cv2.calibrateCamera(object_points, image_points, (w, h))
-    return (res, failures_indices)
     
 def chessboard_corners_maxtrix_to_lists(matrix):
     x_list = []

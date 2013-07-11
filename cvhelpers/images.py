@@ -24,8 +24,3 @@ def file_is_image(filename):
     mt = mimetypes.guess_type(filename)
     return mt[0].split('/')[0] == 'image'
     
-    
-# Testing
-if __name__ == '__main__':
-    open_images_from_dir(r'D:\Dropbox\SINTEF\img\first_four')
-    
