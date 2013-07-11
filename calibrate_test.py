@@ -60,11 +60,10 @@ for i in range(num_of_tests):
     
 camera_matrices = []
 
-fx, fy, cx, cy = calibration.get_camera_intrinsic_parameters(camera_matrix)
-fx_minmax = [fx, fx]
-fy_minmax = [fy, fy]
-cx_minmax = [cx, cx]
-cy_minmax = [cy, cy]
+fx_list = []
+fy_list = []
+cx_list = []
+cy_list = []
 
 for t in tests:
     sample_images = [filtered_images[el] for el in t]
@@ -75,18 +74,10 @@ for t in tests:
     camera_matrix = res[1]
     
     fx, fy, cx, cy = calibration.get_camera_intrinsic_parameters(camera_matrix)
-    
-    fx_minmax[0] = fx if fx < fx_minmax[0] else fx_minmax[0]
-    fx_minmax[1] = fx if fx > fx_minmax[1] else fx_minmax[1]
-    
-    fy_minmax[0] = fy if fy < fy_minmax[0] else fy_minmax[0]
-    fy_minmax[1] = fy if fy > fy_minmax[1] else fy_minmax[1]
-    
-    cx_minmax[0] = cx if cx < cx_minmax[0] else cx_minmax[0]
-    cx_minmax[1] = cx if cx > cx_minmax[1] else cx_minmax[1]
-    
-    cy_minmax[0] = cy if cy < cy_minmax[0] else cy_minmax[0]
-    cy_minmax[1] = cy if cy > cy_minmax[1] else cy_minmax[1]
+    fx_list.append(fx)
+    fy_list.append(fy)
+    cx_list.append(cx)
+    cy_list.append(cy)
         
     camera_matrices.append(np.array(camera_matrix))
     
@@ -96,6 +87,11 @@ for i in range(1, len(camera_matrices)):
     avg_matrix += camera_matrices[i]
 avg_matrix /= num_of_tests
 print avg_matrix
+
+fx_minmax = [min(fx_list), max(fx_list)]
+fy_minmax = [min(fy_list), max(fy_list)]
+cx_minmax = [min(cx_list), max(cx_list)]
+cy_minmax = [min(cy_list), max(cy_list)]
 
 print 'fx %s (%f)' % (fx_minmax, fx_minmax[1] - fx_minmax[0])
 print 'fy %s (%f)' % (fy_minmax, fy_minmax[1] - fy_minmax[0])
