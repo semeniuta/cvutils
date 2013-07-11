@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-from cvhelpers import images as cvhimages
-
 
 def calibrate_camera(images, pattern_size, square_size, chessboard_corners_results=None):
     '''

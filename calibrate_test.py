@@ -3,6 +3,11 @@ from cvhelpers import images
 import random
 import numpy as np
 import cv2
+import os
+import cPickle as pickle
+import time
+
+start = time.time()
 
 ''' Different image sets for testing '''
 first_four = (r'D:\Dropbox\SINTEF\img\first_four\*_0.bmp', (7, 7), 2.9, 'data/first_four.pickle')
@@ -10,12 +15,25 @@ opencv_sample = (r'D:\Dropbox\SINTEF\img\opencv_sample\left*.jpg', (9, 6), 1.0, 
 new_set_1 = (r'D:\Dropbox\SINTEF\img\Camera1-1\*.bmp', (8, 7), 2.9, 'data/new_set_1.pickle')
 new_set_2 = (r'D:\Dropbox\SINTEF\img\Camera2-1\*.bmp', (8, 7), 2.9, 'data/new_set_2.pickle')
 
-images_mask, pattern_size, square_size, data_file = new_set_2
+''' Sample  testing parameters'''
+sample_size = 20
+num_of_tests = 100
 
-''' Find chessboard corners on all images '''
-opened_images = images.open_images_from_mask(images_mask)
-chessboard_corners_results = [cv2.findChessboardCorners(img, pattern_size) for img in opened_images]
-found = [res[0] for res in chessboard_corners_results]
+images_mask, pattern_size, square_size, data_file = new_set_1
+
+''' Open the images and find chessboard corners on them '''
+if not os.path.exists(data_file):
+    opened_images = images.open_images_from_mask(images_mask)
+    chessboard_corners_results = [cv2.findChessboardCorners(img, pattern_size) for img in opened_images]
+    found = [res[0] for res in chessboard_corners_results]    
+    with open(data_file, 'wb') as f:
+        pickle.dump(opened_images, f)
+        pickle.dump(chessboard_corners_results, f)
+else:
+    with open(data_file, 'rb') as f:
+        print 'Loading from file %s' % data_file
+        opened_images = pickle.load(f)
+        chessboard_corners_results = pickle.load(f)
 
 ''' Filter out the images that failed during the cv2.findChessboardCorners call'''
 filtered_images = []
@@ -33,8 +51,6 @@ print 'All images:'
 print camera_matrix
 
 ''' Samples testing ''' 
-sample_size = 30
-num_of_tests = 3
 num_of_images_total = len(filtered_images)
 tests = []
 for i in range(num_of_tests):
@@ -60,4 +76,5 @@ for i in range(1, len(camera_matrices)):
 avg_matrix /= num_of_tests
 print avg_matrix
 
-
+finish = time.time()
+print 'It took %f seconds to execute' % (finish - start)
