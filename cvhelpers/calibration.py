@@ -30,6 +30,19 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     res = cv2.calibrateCamera(object_points, image_points, (w, h))
     return res
     
+def get_camera_intrinsic_parameters(camera_matrix):
+    '''
+    Returns a tuple of camera intrinsic parameters 
+    (based on the camera matrix privided) in the following order:
+    fx, fy, cx, cy
+    '''
+    fx = camera_matrix[0, 0]
+    fy = camera_matrix[1, 1]
+    cx = camera_matrix[0, 2]
+    cy = camera_matrix[1, 2]
+    
+    return (fx, fy, cx, cy)
+    
 def chessboard_corners_maxtrix_to_lists(matrix):
     x_list = []
     y_list = []

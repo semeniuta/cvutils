@@ -16,16 +16,15 @@ new_set_1 = (r'D:\Dropbox\SINTEF\img\Camera1-1\*.bmp', (8, 7), 2.9, 'data/new_se
 new_set_2 = (r'D:\Dropbox\SINTEF\img\Camera2-1\*.bmp', (8, 7), 2.9, 'data/new_set_2.pickle')
 
 ''' Sample  testing parameters'''
-sample_size = 20
-num_of_tests = 100
+sample_size = 10
+num_of_tests = 5
 
 images_mask, pattern_size, square_size, data_file = new_set_1
 
 ''' Open the images and find chessboard corners on them '''
 if not os.path.exists(data_file):
     opened_images = images.open_images_from_mask(images_mask)
-    chessboard_corners_results = [cv2.findChessboardCorners(img, pattern_size) for img in opened_images]
-    found = [res[0] for res in chessboard_corners_results]    
+    chessboard_corners_results = [cv2.findChessboardCorners(img, pattern_size) for img in opened_images]    
     with open(data_file, 'wb') as f:
         pickle.dump(opened_images, f)
         pickle.dump(chessboard_corners_results, f)
@@ -34,6 +33,8 @@ else:
         print 'Loading from file %s' % data_file
         opened_images = pickle.load(f)
         chessboard_corners_results = pickle.load(f)
+
+found = [res[0] for res in chessboard_corners_results]
 
 ''' Filter out the images that failed during the cv2.findChessboardCorners call'''
 filtered_images = []
@@ -58,6 +59,13 @@ for i in range(num_of_tests):
     tests.append(sample)
     
 camera_matrices = []
+
+fx, fy, cx, cy = calibration.get_camera_intrinsic_parameters(camera_matrix)
+fx_minmax = [fx, fx]
+fy_minmax = [fy, fy]
+cx_minmax = [cx, cx]
+cy_minmax = [cy, cy]
+
 for t in tests:
     sample_images = [filtered_images[el] for el in t]
     sample_corners = [filtered_chessboard_corners_results[el] for el in t]
@@ -65,8 +73,21 @@ for t in tests:
     print 'Sample %s:' % t
     res = calibration.calibrate_camera(sample_images, pattern_size, square_size, sample_corners)
     camera_matrix = res[1]
-    print camera_matrix    
     
+    fx, fy, cx, cy = calibration.get_camera_intrinsic_parameters(camera_matrix)
+    
+    fx_minmax[0] = fx if fx < fx_minmax[0] else fx_minmax[0]
+    fx_minmax[1] = fx if fx > fx_minmax[1] else fx_minmax[1]
+    
+    fy_minmax[0] = fy if fy < fy_minmax[0] else fy_minmax[0]
+    fy_minmax[1] = fy if fy > fy_minmax[1] else fy_minmax[1]
+    
+    cx_minmax[0] = cx if cx < cx_minmax[0] else cx_minmax[0]
+    cx_minmax[1] = cx if cx > cx_minmax[1] else cx_minmax[1]
+    
+    cy_minmax[0] = cy if cy < cy_minmax[0] else cy_minmax[0]
+    cy_minmax[1] = cy if cy > cy_minmax[1] else cy_minmax[1]
+        
     camera_matrices.append(np.array(camera_matrix))
     
 print 'Averaged matrix:'
@@ -75,6 +96,11 @@ for i in range(1, len(camera_matrices)):
     avg_matrix += camera_matrices[i]
 avg_matrix /= num_of_tests
 print avg_matrix
+
+print 'fx %s (%f)' % (fx_minmax, fx_minmax[1] - fx_minmax[0])
+print 'fy %s (%f)' % (fy_minmax, fy_minmax[1] - fy_minmax[0])
+print 'cx %s (%f)' % (cx_minmax, cx_minmax[1] - cx_minmax[0])
+print 'cy %s (%f)' % (cy_minmax, cy_minmax[1] - cy_minmax[0])
 
 finish = time.time()
 print 'It took %f seconds to execute' % (finish - start)
