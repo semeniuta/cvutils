@@ -7,10 +7,10 @@ new_set_1 = (r'D:\Dropbox\SINTEF\img\Camera1-1\*.bmp', (8, 7), 2.9, 'data/new_se
 new_set_2 = (r'D:\Dropbox\SINTEF\img\Camera2-1\*.bmp', (8, 7), 2.9, 'data/new_set_2.pickle')
 
 ''' Sample  testing parameters'''
-sample_size = 10
-num_of_tests = 200
+sample_size = 8
+num_of_tests = 5
 
-images_mask, pattern_size, square_size, data_file = new_set_1
+images_mask, pattern_size, square_size, data_file = opencv_sample
 
 results_dir = 'D:\Dropbox\SINTEF\experiments'
 

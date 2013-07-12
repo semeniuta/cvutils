@@ -43,6 +43,15 @@ def get_camera_intrinsic_parameters(camera_matrix):
     
     return (fx, fy, cx, cy)
     
+def get_calibration_results_as_a_tuple(res):
+    rms, camera_matrix, dist_coefs, rvecs, tvecs = res       
+    
+    fx, fy, cx, cy = get_camera_intrinsic_parameters(camera_matrix)
+    k1, k2, p1, p2, k3 = dist_coefs[0]
+    
+    return (rms, fx, fy, cx, cy, k1, k2, p1, p2, k3)      
+
+    
 def chessboard_corners_maxtrix_to_lists(matrix):
     x_list = []
     y_list = []
