@@ -65,13 +65,20 @@ def different_samples_experiment(images_mask, pattern_size, square_size, data_fi
     
     with open(os.path.join(results_dir, 'samples_calibration.csv'), 'wb') as calib_res_file:
         write_calibration_results_to_file(res_table, calib_res_file)
+
+    ''' Create and save histograms '''
+    res_table_arr = np.array(res_table)
+    fx = res_table_arr[:, 1]
+    fy = res_table_arr[:, 2]
+    cx = res_table_arr[:, 3]
+    cy = res_table_arr[:, 4]
+ 
+    nbins = 100
     
-    
-#    nbins = 100
-#    create_and_save_histogram(fx_list, nbins, 'fx', os.path.join(results_dir, 'fx_hist.png'))
-#    create_and_save_histogram(fy_list, nbins, 'fy', os.path.join(results_dir, 'fy_hist.png'))
-#    create_and_save_histogram(cx_list, nbins, 'cx', os.path.join(results_dir, 'cx_hist.png'))
-#    create_and_save_histogram(cy_list, nbins, 'cy', os.path.join(results_dir, 'cy_hist.png'))
+    create_and_save_histogram(fx, nbins, 'fx', os.path.join(results_dir, 'fx_hist.png'))
+    create_and_save_histogram(fy, nbins, 'fy', os.path.join(results_dir, 'fy_hist.png'))
+    create_and_save_histogram(cx, nbins, 'cx', os.path.join(results_dir, 'cx_hist.png'))
+    create_and_save_histogram(cy, nbins, 'cy', os.path.join(results_dir, 'cy_hist.png'))
             
 def write_calibration_results_to_file(res_table, f): 
     columns = ['rms', 'fx', 'fy', 'cx', 'cy', 'k1', 'k2', 'p1', 'p2', 'k3']    
