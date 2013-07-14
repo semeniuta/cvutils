@@ -9,12 +9,13 @@ import matplotlib.pyplot as plt
 import csv
 import time
 
-def different_samples_experiment(images_mask, pattern_size, square_size, data_file, sample_size, num_of_tests, experiments_dir=None):
+def different_samples_experiment(images_mask, pattern_size, square_size, data_file, sample_size, num_of_tests, experiments_dir, experiment_name):
     
     start = time.time()    
     
     experiment_start_label = time.strftime('%y-%m-%d_%H%M%S', time.localtime(start))
-    results_dir = os.path.join(experiments_dir, experiment_start_label)
+    current_dir = '%s_%s' % (experiment_start_label, experiment_name)
+    results_dir = os.path.join(experiments_dir, current_dir)
     os.makedirs(results_dir)
     
     ''' Open the images and find chessboard corners on them '''
@@ -86,7 +87,6 @@ def write_calibration_results_to_file(res_table, f):
     w.writerow(columns)
         
     for row in res_table:    
-        pass               
         w.writerow(row)
     
 def create_and_save_histogram(data, nbins, title, filename):
