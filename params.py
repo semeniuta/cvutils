@@ -14,6 +14,6 @@ class ImageSets:
 
 class CalibrationExperiment:
     sample_size = 7
-    num_of_tests = 100    
+    num_of_samples = 100    
     imageset = ImageSets.opencv_sample    
     results_dir = Directories.experiment_results
