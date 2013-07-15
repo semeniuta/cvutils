@@ -3,7 +3,19 @@ import numpy as np
 
 def calibrate_camera(images, pattern_size, square_size, chessboard_corners_results=None):
     '''
-    returns: rms, camera_matrix, dist_coefs, rvecs, tvecs
+    Conducts camera calibration using the photos of chessboard pattern
+
+    Arguments:
+    images -- a list of images to process
+    pattern_size -- dimmension of the chessboard pattern, e.g. (7, 8)
+    square_size -- size of a square edge on the chessboard
+    chessboard_corners_results -- a list of tuples got from the
+                                  cv2.findChessboardCorners function call
+                                  for each image (default None)
+    
+    Returns a tuple as a result of the cv2.calibrateCamera function call,
+    containing the following calibration results:
+    rms, camera_matrix, dist_coefs, rvecs, tvecs
     '''    
     pattern_points = get_pattern_points(pattern_size, square_size)
     object_points = []
@@ -30,6 +42,20 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     res = cv2.calibrateCamera(object_points, image_points, (w, h))
     return res
     
+def get_pattern_points(pattern_size, square_size):
+    '''
+    Returns a matrix of the pattern points for using in the
+    calibration algorithm
+    
+    Arguments:
+    pattern_size -- dimmension of the chessboard pattern, e.g. (7, 8)
+    square_size -- size of a square edge on the chessboard
+    '''
+    pattern_points = np.zeros((np.prod(pattern_size), 3), np.float32)
+    pattern_points[:,:2] = np.indices(pattern_size).T.reshape(-1, 2)
+    pattern_points *= square_size
+    return pattern_points
+
 def get_camera_intrinsic_parameters(camera_matrix):
     '''
     Returns a tuple of camera intrinsic parameters 
@@ -44,6 +70,10 @@ def get_camera_intrinsic_parameters(camera_matrix):
     return (fx, fy, cx, cy)
     
 def get_calibration_results_as_a_tuple(res):
+    ''' 
+    Returns a tuple of the following calibration results:
+    rms, fx, fy, cx, cy, k1, k2, p1, p2, k3    
+    '''
     rms, camera_matrix, dist_coefs, rvecs, tvecs = res       
     
     fx, fy, cx, cy = get_camera_intrinsic_parameters(camera_matrix)
@@ -51,8 +81,12 @@ def get_calibration_results_as_a_tuple(res):
     
     return (rms, fx, fy, cx, cy, k1, k2, p1, p2, k3)      
 
-    
 def chessboard_corners_maxtrix_to_lists(matrix):
+    '''
+    Convert the result of the cv2.findChessboardCorners function call to 
+    two lists of the corresponding X and Y points. 
+    Returns a tuple (x_list, y_list)
+    '''    
     x_list = []
     y_list = []
     for el in matrix:
@@ -60,9 +94,3 @@ def chessboard_corners_maxtrix_to_lists(matrix):
         x_list.append(x)
         y_list.append(y)
     return (x_list, y_list)
-    
-def get_pattern_points(pattern_size, square_size):
-    pattern_points = np.zeros((np.prod(pattern_size), 3), np.float32)
-    pattern_points[:,:2] = np.indices(pattern_size).T.reshape(-1, 2)
-    pattern_points *= square_size
-    return pattern_points

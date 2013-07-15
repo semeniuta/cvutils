@@ -10,6 +10,20 @@ import csv
 import time
 
 def different_samples_experiment(images_mask, pattern_size, square_size, data_file, sample_size, num_of_tests, experiments_dir, experiment_name):
+    ''' 
+    Conducts an experiment on a given set of images with invoking the calibration
+    algorithm on a number of samples of randomly chosen images from the set. 
+
+    Arguments:
+    images_mask -- a masked string defining the path to the image set
+    pattern_size -- dimmension of the chessboard pattern, e.g. (7, 8)
+    square_size -- size of a square edge on the chessboard
+    data_file -- path to the pickle file for saving/restoring image processing data
+    sample_size -- size of the samples taken for calibration
+    num_of_tests -- number of samples to be tested
+    experiments_dir -- directory in which the results of the experiment are to be saved
+    experiment_name -- short string defining the name of current experiment
+    '''
     
     start = time.time()    
     
@@ -92,6 +106,9 @@ def different_samples_experiment(images_mask, pattern_size, square_size, data_fi
     create_and_save_histogram(k3, nbins, 'k3', os.path.join(results_dir, 'k3_hist.png'))
             
 def write_calibration_results_to_file(res_table, f): 
+    ''' 
+    Saves the result of the calibration experiment to the specified CSV file
+    '''
     columns = ['rms', 'fx', 'fy', 'cx', 'cy', 'k1', 'k2', 'p1', 'p2', 'k3']    
     w = csv.writer(f)
     w.writerow(columns)
@@ -100,6 +117,9 @@ def write_calibration_results_to_file(res_table, f):
         w.writerow(row)
     
 def create_and_save_histogram(data, nbins, title, filename):
+    ''' 
+    Saves the histogram for the given data under the specified filename    
+    '''
     plt.figure()    
     plt.hist(data, nbins)
     plt.title(title)
