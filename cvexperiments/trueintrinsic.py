@@ -3,7 +3,7 @@
 from cvexperiments import statsfuncs as sf
 from cvhelpers import calibration
 
-def find_true_intrinsic(data, ndigits=2):
+def find_true_intrinsics(data, ndigits=2):
     '''
     Finds "true" intrinsic parameters of the camera
     based on experimental data gathered by 
