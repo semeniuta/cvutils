@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from cvexperiments import trueintrinsic as ti
-from cvexperiments import statsfuncs as sf
 import pandas
 import os
-import matplotlib.pyplot as plt
 
 def read_data(data_dir):
     return pandas.read_csv(os.path.join(data_dir, 'samples_calibration.csv'))  

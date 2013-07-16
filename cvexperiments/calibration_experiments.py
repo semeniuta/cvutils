@@ -1,6 +1,6 @@
 from cvhelpers import calibration
 from cvhelpers import images
-from cvexperiments import graphics as g
+from cvhelpers import output
 import random
 import numpy as np
 import cv2
@@ -95,15 +95,15 @@ def different_samples_experiment(images_mask, pattern_size, square_size, data_fi
  
     nbins = 100
     
-    g.create_and_save_histogram(fx, nbins, 'fx', os.path.join(results_dir, 'fx_hist.png'))
-    g.create_and_save_histogram(fy, nbins, 'fy', os.path.join(results_dir, 'fy_hist.png'))
-    g.create_and_save_histogram(cx, nbins, 'cx', os.path.join(results_dir, 'cx_hist.png'))
-    g.create_and_save_histogram(cy, nbins, 'cy', os.path.join(results_dir, 'cy_hist.png'))
-    g.create_and_save_histogram(k1, nbins, 'k1', os.path.join(results_dir, 'k1_hist.png'))
-    g.create_and_save_histogram(k2, nbins, 'k2', os.path.join(results_dir, 'k2_hist.png'))
-    g.create_and_save_histogram(p1, nbins, 'p1', os.path.join(results_dir, 'p1_hist.png'))
-    g.create_and_save_histogram(p2, nbins, 'p2', os.path.join(results_dir, 'p2_hist.png'))
-    g.create_and_save_histogram(k3, nbins, 'k3', os.path.join(results_dir, 'k3_hist.png'))
+    output.create_and_save_histogram(fx, nbins, 'fx', os.path.join(results_dir, 'fx_hist.png'))
+    output.create_and_save_histogram(fy, nbins, 'fy', os.path.join(results_dir, 'fy_hist.png'))
+    output.create_and_save_histogram(cx, nbins, 'cx', os.path.join(results_dir, 'cx_hist.png'))
+    output.create_and_save_histogram(cy, nbins, 'cy', os.path.join(results_dir, 'cy_hist.png'))
+    output.create_and_save_histogram(k1, nbins, 'k1', os.path.join(results_dir, 'k1_hist.png'))
+    output.create_and_save_histogram(k2, nbins, 'k2', os.path.join(results_dir, 'k2_hist.png'))
+    output.create_and_save_histogram(p1, nbins, 'p1', os.path.join(results_dir, 'p1_hist.png'))
+    output.create_and_save_histogram(p2, nbins, 'p2', os.path.join(results_dir, 'p2_hist.png'))
+    output.create_and_save_histogram(k3, nbins, 'k3', os.path.join(results_dir, 'k3_hist.png'))
             
 def write_calibration_results_to_file(res_table, f): 
     ''' 
