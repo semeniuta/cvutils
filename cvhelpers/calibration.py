@@ -69,6 +69,22 @@ def get_camera_intrinsic_parameters(camera_matrix):
     
     return (fx, fy, cx, cy)
     
+def get_camera_matrix(params):
+    '''
+    Returns camera matrix based on given intrinsic parameters
+    of the camera: fx, fy, cx, cy (supplied as a sequence)
+    '''
+    
+    fx, fy, cx, cy = params
+    cm = np.zeros((3, 3))
+    cm[0, 0] = fx
+    cm[1, 1] = fy
+    cm[0, 2] = cx
+    cm[1, 2] = cy
+    cm[2, 2] = 1
+    
+    return cm
+    
 def get_calibration_results_as_a_tuple(res):
     ''' 
     Returns a tuple of the following calibration results:
