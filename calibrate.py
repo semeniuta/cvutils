@@ -25,9 +25,9 @@ def start_experiment(images_mask, pattern_size, square_size, data_file, sample_s
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('--imageset')  
-    parser.add_argument('--samplesize', type=int)
-    parser.add_argument('--nsamples', type=int)  
+    parser.add_argument('--imageset', help='a masked string defining the path to the image set')  
+    parser.add_argument('--samplesize', type=int, help='sample size')
+    parser.add_argument('--nsamples', type=int, help='number of samples')  
     args = parser.parse_args()    
     
     parameters = initialize_parameters(args)
