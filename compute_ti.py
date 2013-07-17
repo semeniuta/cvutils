@@ -4,6 +4,7 @@ from cvhelpers import output
 import pandas
 import os
 from xlsxwriter.workbook import Workbook
+import cPickle as pickle
 
 def read_data(data_dir):
     return pandas.read_csv(os.path.join(data_dir, 'samples_calibration.csv'))  
@@ -46,8 +47,9 @@ def save_results_to_excel_file(filename, intrinsics):
         
     wb.close()
     
-def pickle_results(intrinsics):
-    pass
+def pickle_results(filename, intrinsics):
+    with open(filename, 'wb') as f:
+        pickle.dump(intrinsics, f)
     
 if __name__ == '__main__':
         
@@ -64,9 +66,10 @@ if __name__ == '__main__':
     
     for cam, ti_res in ti_results.iteritems():
         intrinsics = ti_res[0]
-        res_file = os.path.join(data_dirs[cam], 'res_%s.xlsx' % cam)
-        save_results_to_excel_file(res_file, intrinsics)
-        pickle_results(intrinsics)
+        excel_file = os.path.join(data_dirs[cam], 'res_%s.xlsx' % cam)
+        pickle_file = os.path.join(data_dirs[cam], 'intrinsics.pickle')        
+        save_results_to_excel_file(excel_file, intrinsics)
+        pickle_results(pickle_file, intrinsics)
         
     if CREATE_HISTOGRAMS:
         create_hist(ndigits_list[1:], ti_results['left'][0], ti_results['left'][1], 'left')
