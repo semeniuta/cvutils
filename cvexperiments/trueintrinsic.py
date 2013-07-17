@@ -28,7 +28,7 @@ def find_true_intrinsics(data, ndigits=2):
     constuctor_dict = dict(zip(colnames, cols))    
     new_dataframe = pandas.DataFrame(constuctor_dict)
     
-    res = (camera_matrix, dist_coefs)
+    res = (camera_matrix, tuple(dist_coefs))
     
     return res, new_dataframe
     
@@ -36,7 +36,6 @@ def round_dataframe_columns(df, ndigits_list):
     i = 0
     rounded_cols = []
     for colname, series in df.iteritems():
-        print colname
         if ndigits_list[i] == None:
             rounded_cols.append(series)
         else:
@@ -52,6 +51,11 @@ def compute_histogram_nbins(dataseries, ndigits):
     denom = 1.0 / 10**(ndigits)
     nbins = int(r/denom)
     return nbins
+    
+def expand_ti_tuple(ti_tuple):
+    camera_matrix, dist_coefs = ti_tuple
+    matrix_as_a_tuple = calibration.get_camera_intrinsic_parameters(camera_matrix)
+    return matrix_as_a_tuple + dist_coefs
     
 
         
