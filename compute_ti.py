@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from cvexperiments import trueintrinsic as ti
-from cvexperiments import statsfuncs as sf
 from cvhelpers import output
 import pandas
 import os
@@ -16,8 +15,7 @@ def create_hist(ndigits_list, intrinsics, dataframe, imageset_name=''):
     intr = ti.expand_ti_tuple(intrinsics)                 
     for i in range(len(varnames)):
         var = varnames[i]
-        series = dataframe[var]    
-        print i, ndigits_list[i]        
+        series = dataframe[var]           
         nbins = ti.compute_histogram_nbins(series, ndigits_list[i])       
         if not nbins == 0:
             output.create_histogram(series, nbins, '%s %s' % (imageset_name, var))
@@ -29,7 +27,7 @@ def find_ti(data_dir, ndigits_list):
     intrinsics, new_dataframe = ti.find_true_intrinsics(dataframe, ndigits_list)
     return intrinsics, new_dataframe 
 
-def save_results_to_excel(filename, intrinsics):
+def save_results_to_excel_file(filename, intrinsics):
     wb = Workbook(filename)
     sheet = wb.add_worksheet()
     bold = wb.add_format({'bold': 1})
@@ -42,11 +40,14 @@ def save_results_to_excel(filename, intrinsics):
         for j in range(cols):
             sheet.write(2+i, 1+j, camera_matrix[i, j])
             
-    sheet.write('G2', 'Distrotion coeffitients', bold)
+    sheet.write('G2', 'Distortion coeffitients', bold)
     for i in range(len(dist_coefs)):
         sheet.write(2, 6+i, dist_coefs[i])
         
     wb.close()
+    
+def pickle_results(intrinsics):
+    pass
     
 if __name__ == '__main__':
         
@@ -54,18 +55,21 @@ if __name__ == '__main__':
     data_dir_left = r'D:\Dropbox\SINTEF\experiments\LEFT_20x2000' 
     data_dir_right = r'D:\Dropbox\SINTEF\experiments\RIGHT_20x2000' 
     ndigits_list = [None, 2, 2, 2, 2, 3, 3, 3, 3, 3]
+    CREATE_HISTOGRAMS = False
 
     ''' Compute "true intrinsics" for both cameras '''    
-    data_dirs = (data_dir_left, data_dir_right)
+    data_dirs = {'left': data_dir_left, 'right': data_dir_right}
     
-    left, right = [find_ti(d, ndigits_list) for d in data_dirs] 
+    ti_results = {cam: find_ti(ddir, ndigits_list) for cam, ddir in data_dirs.iteritems()}
     
-    for name, cam in {'LEFT': left, 'RIGHT': right}.iteritems():
-        intrinsics = cam[0]
-        save_results_to_excel('res_%s.xlsx' % name, intrinsics)
+    for cam, ti_res in ti_results.iteritems():
+        intrinsics = ti_res[0]
+        res_file = os.path.join(data_dirs[cam], 'res_%s.xlsx' % cam)
+        save_results_to_excel_file(res_file, intrinsics)
+        pickle_results(intrinsics)
         
-    
-    #create_hist(ndigits_list[1:], left[0], left[1], 'LEFT')
+    if CREATE_HISTOGRAMS:
+        create_hist(ndigits_list[1:], ti_results['left'][0], ti_results['left'][1], 'left')
     
     
 
