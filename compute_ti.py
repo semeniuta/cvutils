@@ -4,7 +4,7 @@ from cvexperiments import statsfuncs as sf
 from cvhelpers import output
 import pandas
 import os
-import argparse
+from xlsxwriter.workbook import Workbook
 
 def read_data(data_dir):
     return pandas.read_csv(os.path.join(data_dir, 'samples_calibration.csv'))  
@@ -18,7 +18,7 @@ def create_hist(ndigits_list, intrinsics, dataframe, imageset_name=''):
         var = varnames[i]
         series = dataframe[var]    
         print i, ndigits_list[i]        
-        nbins = ti.compute_histogram_nbins(series, ndigits_list[i])
+        nbins = ti.compute_histogram_nbins(series, ndigits_list[i])       
         if not nbins == 0:
             output.create_histogram(series, nbins, '%s %s' % (imageset_name, var))
             x = intr[i]               
@@ -28,7 +28,25 @@ def find_ti(data_dir, ndigits_list):
     dataframe = read_data(data_dir)
     intrinsics, new_dataframe = ti.find_true_intrinsics(dataframe, ndigits_list)
     return intrinsics, new_dataframe 
+
+def save_results_to_excel(filename, intrinsics):
+    wb = Workbook(filename)
+    sheet = wb.add_worksheet()
+    bold = wb.add_format({'bold': 1})
+    sheet.write('B2', 'Camera matrix', bold)
     
+    camera_matrix, dist_coefs = intrinsics
+    
+    rows, cols = camera_matrix.shape
+    for i in range(rows):
+        for j in range(cols):
+            sheet.write(2+i, 1+j, camera_matrix[i, j])
+            
+    sheet.write('G2', 'Distrotion coeffitients', bold)
+    for i in range(len(dist_coefs)):
+        sheet.write(2, 6+i, dist_coefs[i])
+        
+    wb.close()
     
 if __name__ == '__main__':
         
@@ -42,12 +60,12 @@ if __name__ == '__main__':
     
     left, right = [find_ti(d, ndigits_list) for d in data_dirs] 
     
-    create_hist(ndigits_list[1:], left[0], left[1], 'LEFT')
-    
+    for name, cam in {'LEFT': left, 'RIGHT': right}.iteritems():
+        intrinsics = cam[0]
+        save_results_to_excel('res_%s.xlsx' % name, intrinsics)
         
     
-    #create_hist(ndigits, new_dataframes, intrinsics)
-
+    #create_hist(ndigits_list[1:], left[0], left[1], 'LEFT')
     
     
 
