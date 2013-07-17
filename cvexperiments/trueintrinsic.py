@@ -15,20 +15,11 @@ def find_true_intrinsics(data, ndigits=2):
     ndigits -- number of digits after the decical point to which
                the float numbers will be rounded
     '''        
-
-    rms = data['rms']    
-    fx = sf.round_dataframe_col(data['fx'], 0)    
-    fy = sf.round_dataframe_col(data['fy'], 0)
-    cx = sf.round_dataframe_col(data['cx'], 0)
-    cy = sf.round_dataframe_col(data['cy'], 0)    
-    k1 = sf.round_dataframe_col(data['k1'], ndigits)
-    k2 = sf.round_dataframe_col(data['k2'], ndigits)
-    p1 = sf.round_dataframe_col(data['p1'], ndigits)
-    p2 = sf.round_dataframe_col(data['p2'], ndigits)
-    k3 = sf.round_dataframe_col(data['k3'], ndigits)
-
-    cols = (fx, fy, cx, cy, k1, k2, p1, p2, k3)
-    modes = [sf.calc_mode(c) for c in cols]
+    
+    ndigits_list = [None, 0, 0, 0, 0, ndigits, ndigits, ndigits, ndigits, ndigits]    
+        
+    cols = round_dataframe_columns(data, ndigits_list)
+    modes = [sf.calc_mode(c) for c in cols[1:]]
     
     camera_matrix = calibration.get_camera_matrix(modes[:4])
     dist_coefs = modes[4:]
@@ -41,5 +32,27 @@ def find_true_intrinsics(data, ndigits=2):
     
     return res, new_dataframe
     
+def round_dataframe_columns(df, ndigits_list):    
+    i = 0
+    rounded_cols = []
+    for colname, series in df.iteritems():
+        print colname
+        if ndigits_list[i] == None:
+            rounded_cols.append(series)
+        else:
+            rc = sf.round_dataframe_col(series, ndigits_list[i])
+            rounded_cols.append(rc)
+        i += 1
+    
+    return rounded_cols            
+
+def compute_histogram_nbins(dataseries, ndigits):
+
+    r = dataseries.max() - dataseries.min()
+    denom = 1.0 / 10**(ndigits)
+    nbins = int(r/denom)
+    return nbins
+    
+
         
 

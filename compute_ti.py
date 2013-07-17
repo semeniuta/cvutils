@@ -20,20 +20,27 @@ if __name__ == '__main__':
     
     intrinsics = []
     new_dataframes = []
-
+    hist_nbins = []
     for df in dataframes:
         res, new_dataframe = ti.find_true_intrinsics(df, ndigits)
         intrinsics.append(res)
         new_dataframes.append(new_dataframe)
     
-    ''' Create and save histograms '''
-    par = 'k1'
-    data = sf.round_dataframe_col(dataframes[0][par], ndigits)
-    nbins = 100
-    x = intrinsics[0][1][0]
     
-    output.create_histogram(data, nbins, par)
-    output.draw_vertical_line(x)
+    
+    
+    
+    
+    
+    
+    ''' Create and save histograms '''
+#    par = 'k1'
+#    data = sf.round_dataframe_col(dataframes[0][par], ndigits)
+#    nbins = 100
+#    x = intrinsics[0][1][0]
+#    
+#    output.create_histogram(data, nbins, par)
+#    output.draw_vertical_line(x)
     
     
     
