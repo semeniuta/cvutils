@@ -9,24 +9,19 @@ import cPickle as pickle
 def read_data(data_dir):
     return pandas.read_csv(os.path.join(data_dir, 'samples_calibration.csv'))  
 
-def create_hist(ndigits_list, intrinsics, dataframe, imageset_name=''):    
+def create_hist(intrinsics, original_dataset, imageset_name=''):    
     ''' Create and save histograms '''    
     varnames = ['fx', 'fy', 'cx', 'cy', 'k1', 'k2', 'p1', 'p2', 'k3']    
     
     intr = ti.expand_ti_tuple(intrinsics)                 
     for i in range(len(varnames)):
         var = varnames[i]
-        series = dataframe[var]           
-        nbins = ti.compute_histogram_nbins(series, ndigits_list[i])       
-        if not nbins == 0:
-            output.create_histogram(series, nbins, '%s %s' % (imageset_name, var))
-            x = intr[i]               
-            output.draw_vertical_line(x)
-
-def find_ti(data_dir, ndigits_list):
-    dataframe = read_data(data_dir)
-    intrinsics, new_dataframe = ti.find_true_intrinsics(dataframe, ndigits_list)
-    return intrinsics, new_dataframe 
+        series = original_dataset[var]           
+        nbins = 100
+        
+        output.create_histogram(series, nbins, '%s %s' % (imageset_name, var))
+        x = intr[i]               
+        output.draw_vertical_line(x)
 
 def save_results_to_excel_file(filename, intrinsics):
     wb = Workbook(filename)
@@ -56,13 +51,14 @@ if __name__ == '__main__':
     ''' Parameters '''
     data_dir_left = r'D:\Dropbox\SINTEF\experiments\LEFT_20x2000' 
     data_dir_right = r'D:\Dropbox\SINTEF\experiments\RIGHT_20x2000' 
-    ndigits_list = [None, 2, 2, 2, 2, 3, 3, 3, 3, 3]
-    CREATE_HISTOGRAMS = False
+    ndigits_list = [None, 2, 2, 2, 2, 2, 2, 3, 3, 2]
+    CREATE_HISTOGRAMS = True
 
     ''' Compute "true intrinsics" for both cameras '''    
     data_dirs = {'left': data_dir_left, 'right': data_dir_right}
     
-    ti_results = {cam: find_ti(ddir, ndigits_list) for cam, ddir in data_dirs.iteritems()}
+    dataframes = {cam: read_data(ddir) for cam, ddir in data_dirs.iteritems()}
+    ti_results = {cam: ti.find_true_intrinsics(dframe, ndigits_list) for cam, dframe in dataframes.iteritems()}
     
     for cam, ti_res in ti_results.iteritems():
         intrinsics = ti_res[0]
@@ -72,7 +68,7 @@ if __name__ == '__main__':
         pickle_results(pickle_file, intrinsics)
         
     if CREATE_HISTOGRAMS:
-        create_hist(ndigits_list[1:], ti_results['left'][0], ti_results['left'][1], 'left')
+        create_hist(ti_results['left'][0], dataframes['left'], 'left')
     
     
 
