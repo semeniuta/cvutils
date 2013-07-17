@@ -4,7 +4,7 @@ from cvexperiments import statsfuncs as sf
 from cvhelpers import calibration
 import pandas
 
-def find_true_intrinsics(data, ndigits=2):
+def find_true_intrinsics(data, ndigits_list):
     '''
     Finds "true" intrinsic parameters of the camera
     based on experimental data gathered by 
@@ -12,11 +12,10 @@ def find_true_intrinsics(data, ndigits=2):
     
     Arguments:
     d -- dataframe (pandas.DataFrame) object containing the experimental data
-    ndigits -- number of digits after the decical point to which
-               the float numbers will be rounded
+    ndigits_list -- list of number of digits after the decical point to which
+                    the numbers will be rounded: each for the dataframe's
+                    columns (the first value should be None)
     '''        
-    
-    ndigits_list = [None, 0, 0, 0, 0, ndigits, ndigits, ndigits, ndigits, ndigits]    
         
     cols = round_dataframe_columns(data, ndigits_list)
     modes = [sf.calc_mode(c) for c in cols[1:]]
