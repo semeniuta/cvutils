@@ -36,9 +36,9 @@ def save_results_to_excel_file(filename, intrinsics):
         for j in range(cols):
             sheet.write(2+i, 1+j, camera_matrix[i, j])
             
-    sheet.write('G2', 'Distortion coeffitients', bold)
+    sheet.write('F2', 'Distortion coeffitients', bold)
     for i in range(len(dist_coefs)):
-        sheet.write(2, 6+i, dist_coefs[i])
+        sheet.write(2, 5+i, dist_coefs[i])
         
     wb.close()
     
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     data_dir_left = r'D:\Dropbox\SINTEF\experiments\LEFT_20x2000' 
     data_dir_right = r'D:\Dropbox\SINTEF\experiments\RIGHT_20x2000' 
     ndigits_list = [None, 2, 2, 2, 2, 2, 2, 3, 3, 2]
-    CREATE_HISTOGRAMS = True
+    CREATE_HISTOGRAMS = False
 
     ''' Compute "true intrinsics" for both cameras '''    
     data_dirs = {'left': data_dir_left, 'right': data_dir_right}

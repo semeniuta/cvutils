@@ -15,6 +15,12 @@ def find_true_intrinsics(data, ndigits_list):
     ndigits_list -- list of number of digits after the decical point to which
                     the numbers will be rounded: each for the dataframe's
                     columns (the first value should be None)
+                    
+    Returns a tuple containing two elements:
+    (1) tuple containing camera matrix and distortion coeffitients (true
+    intrinsics)
+    (2) pandas.DataFrame object with the colunms rounded in accordance to 
+    ndigits_list
     '''        
         
     cols = round_dataframe_columns(data, ndigits_list)
@@ -31,7 +37,12 @@ def find_true_intrinsics(data, ndigits_list):
     
     return res, new_dataframe
     
-def round_dataframe_columns(df, ndigits_list):    
+def round_dataframe_columns(df, ndigits_list): 
+    ''' 
+    Rounds each column of the dataframes in accordance to the 
+    corrsponding number in ndigits_list (number of digits after the
+    decimal point). Returns a list of pandas.DataSeries objects    
+    '''
     i = 0
     rounded_cols = []
     for colname, series in df.iteritems():
@@ -43,19 +54,22 @@ def round_dataframe_columns(df, ndigits_list):
         i += 1
     
     return rounded_cols            
-
+    
+def expand_ti_tuple(ti_tuple):
+    '''
+    Expand a tuple that is returned by find_true_intrinsics function to
+    tuple containing the following sequence of parameters:
+    (fx, fy, cx, cy, k1, k2, p1, p2, k3)
+    '''
+    camera_matrix, dist_coefs = ti_tuple
+    matrix_as_a_tuple = calibration.get_camera_intrinsic_parameters(camera_matrix)
+    return matrix_as_a_tuple + dist_coefs
+    
 def compute_histogram_nbins(dataseries, ndigits):
 
     r = dataseries.max() - dataseries.min()
     denom = 1.0 / 10**(ndigits)
     nbins = int(r/denom)
     return nbins
-    
-def expand_ti_tuple(ti_tuple):
-    camera_matrix, dist_coefs = ti_tuple
-    matrix_as_a_tuple = calibration.get_camera_intrinsic_parameters(camera_matrix)
-    return matrix_as_a_tuple + dist_coefs
-    
-
         
 
