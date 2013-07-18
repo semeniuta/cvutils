@@ -45,15 +45,8 @@ def save_results_to_excel_file(filename, intrinsics):
 def pickle_results(filename, intrinsics):
     with open(filename, 'wb') as f:
         pickle.dump(intrinsics, f)
-    
-if __name__ == '__main__':
-        
-    ''' Parameters '''
-    data_dir_left = r'D:\Dropbox\SINTEF\experiments\LEFT_20x2000' 
-    data_dir_right = r'D:\Dropbox\SINTEF\experiments\RIGHT_20x2000' 
-    ndigits_list = [None, 2, 2, 2, 2, 2, 2, 3, 3, 2]
-    CREATE_HISTOGRAMS = False
 
+def compute_ti(data_dir_left, data_dir_right, ndigits_list, create_histograms):
     ''' Compute "true intrinsics" for both cameras '''    
     data_dirs = {'left': data_dir_left, 'right': data_dir_right}
     
@@ -69,6 +62,18 @@ if __name__ == '__main__':
         
     if CREATE_HISTOGRAMS:
         create_hist(ti_results['left'][0], dataframes['left'], 'left')
+
+if __name__ == '__main__':
+        
+    ''' Parameters '''
+    data_dir_left = r'D:\Dropbox\SINTEF\experiments\LEFT_20x2000' 
+    data_dir_right = r'D:\Dropbox\SINTEF\experiments\RIGHT_20x2000' 
+    ndigits_list = [None, 2, 2, 2, 2, 2, 2, 3, 3, 2]
+    CREATE_HISTOGRAMS = False
+    
+    compute_ti(data_dir_left, data_dir_right, ndigits_list, CREATE_HISTOGRAMS)
+
+    
     
     
 
