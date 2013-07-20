@@ -5,6 +5,7 @@ import pandas
 import os
 from xlsxwriter.workbook import Workbook
 import cPickle as pickle
+from params import DataDirs
 
 def read_data(data_dir):
     return pandas.read_csv(os.path.join(data_dir, 'samples_calibration.csv'))  
@@ -60,18 +61,19 @@ def compute_ti(data_dir_left, data_dir_right, ndigits_list, create_histograms):
         save_results_to_excel_file(excel_file, intrinsics)
         pickle_results(pickle_file, intrinsics)
         
-    if CREATE_HISTOGRAMS:
+    if create_histograms:
         create_hist(ti_results['left'][0], dataframes['left'], 'left')
 
 if __name__ == '__main__':
         
     ''' Parameters '''
-    data_dir_left = r'D:\Dropbox\SINTEF\experiments\LEFT_20x2000' 
-    data_dir_right = r'D:\Dropbox\SINTEF\experiments\RIGHT_20x2000' 
-    ndigits_list = [None, 2, 2, 2, 2, 2, 2, 3, 3, 2]
-    CREATE_HISTOGRAMS = False
+    ndigits_list = [None, 1, 1, 1, 1, 3, 3, 4, 4, 2]
+    create_histograms = False
     
-    compute_ti(data_dir_left, data_dir_right, ndigits_list, CREATE_HISTOGRAMS)
+    compute_ti(DataDirs.left, DataDirs.right, ndigits_list, create_histograms)
+    
+    #data = read_data(DataDirs.left)
+    #ti.print_statistics(data)
 
     
     

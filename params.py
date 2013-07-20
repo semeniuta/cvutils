@@ -17,3 +17,7 @@ class CalibrationExperiment:
     num_of_samples = 100    
     imageset = ImageSets.opencv_sample    
     results_dir = Directories.experiment_results
+    
+class DataDirs:
+    left = r'D:\Dropbox\SINTEF\experiments\LEFT_20x2000'
+    right = r'D:\Dropbox\SINTEF\experiments\RIGHT_20x2000'

@@ -16,6 +16,26 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     Returns a tuple as a result of the cv2.calibrateCamera function call,
     containing the following calibration results:
     rms, camera_matrix, dist_coefs, rvecs, tvecs
+    '''
+    
+    h, w = images[0].shape
+    
+    object_points, image_points = get_object_and_image_points(images, pattern_size, square_size, chessboard_corners_results)     
+     
+    res = cv2.calibrateCamera(object_points, image_points, (w, h))
+    return res
+
+def get_object_and_image_points(images, pattern_size, square_size, chessboard_corners_results=None):
+    ''' 
+    Returns object points and image points for the given calibration task
+
+    Arguments:
+    images -- a list of images to process
+    pattern_size -- dimmension of the chessboard pattern, e.g. (7, 8)
+    square_size -- size of a square edge on the chessboard
+    chessboard_corners_results -- a list of tuples got from the
+                                  cv2.findChessboardCorners function call
+                                  for each image (default None)            
     '''    
     pattern_points = get_pattern_points(pattern_size, square_size)
     object_points = []
@@ -23,7 +43,6 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     
     for current_index in range(len(images)):
         img = images[current_index]        
-        h, w = img.shape
         
         if chessboard_corners_results == None:
             found, corners = cv2.findChessboardCorners(img, pattern_size)       
@@ -39,8 +58,8 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
         image_points.append(corners.reshape(-1, 2))
         object_points.append(pattern_points)
         
-    res = cv2.calibrateCamera(object_points, image_points, (w, h))
-    return res
+    return (object_points, image_points)
+    
     
 def get_pattern_points(pattern_size, square_size):
     '''

@@ -65,11 +65,24 @@ def expand_ti_tuple(ti_tuple):
     matrix_as_a_tuple = calibration.get_camera_intrinsic_parameters(camera_matrix)
     return matrix_as_a_tuple + dist_coefs
     
+def print_statistics(data):
+    for colname, series in data.iteritems():
+        print colname
+        
+        maxval = series.max()
+        minval = series.min()
+        rangeval = maxval - minval        
+        
+        print minval, maxval, rangeval
+        print '%e' % (rangeval / 100)
+
+
 def compute_histogram_nbins(dataseries, ndigits):
 
     r = dataseries.max() - dataseries.min()
     denom = 1.0 / 10**(ndigits)
     nbins = int(r/denom)
+    print nbins
     return nbins
         
 
