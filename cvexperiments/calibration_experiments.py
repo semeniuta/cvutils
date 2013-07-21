@@ -47,7 +47,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, data_fi
             chessboard_corners_results = pickle.load(f)
     
     ''' Filter out the images that failed during the cv2.findChessboardCorners call'''    
-    filtered_images, filtered_chessboard_corners_results = chessboard.filter_chessboard_corners_results(chessboard_corners_results, opened_images)   
+    filtered_chessboard_corners_results, filtered_images = chessboard.filter_chessboard_corners_results(chessboard_corners_results, opened_images)   
             
     ''' Calibrate camera '''
     res = calibration.calibrate_camera(filtered_images, pattern_size, square_size, filtered_chessboard_corners_results)    
