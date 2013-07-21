@@ -84,17 +84,6 @@ def get_pattern_points(pattern_size, square_size):
     pattern_points *= square_size
     return pattern_points
 
-def filter_chessboard_corners_results(chessboard_corners_results, images):
-    ''' Filter out the images that failed during the cv2.findChessboardCorners call'''
-    found = [res[0] for res in chessboard_corners_results]
-    filtered_images = []
-    filtered_chessboard_corners_results = []
-    for i in range(len(found)):
-        if found[i]:
-            filtered_images.append(images[i])
-            filtered_chessboard_corners_results.append(chessboard_corners_results[i])
-    return (filtered_images, filtered_chessboard_corners_results)
-
 def get_camera_intrinsic_parameters(camera_matrix):
     '''
     Returns a tuple of camera intrinsic parameters 
@@ -135,17 +124,3 @@ def get_calibration_results_as_a_tuple(res):
     k1, k2, p1, p2, k3 = dist_coefs[0]
     
     return (rms, fx, fy, cx, cy, k1, k2, p1, p2, k3)      
-
-def chessboard_corners_maxtrix_to_lists(matrix):
-    '''
-    Convert the result of the cv2.findChessboardCorners function call to 
-    two lists of the corresponding X and Y points. 
-    Returns a tuple (x_list, y_list)
-    '''    
-    x_list = []
-    y_list = []
-    for el in matrix:
-        x, y = el[0]
-        x_list.append(x)
-        y_list.append(y)
-    return (x_list, y_list)
