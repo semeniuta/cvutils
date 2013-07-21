@@ -68,7 +68,7 @@ if __name__ == '__main__':
         
     ''' Parameters '''
     ndigits_list = [None, 1, 1, 1, 1, 3, 3, 4, 4, 2]
-    create_histograms = False
+    create_histograms = True
     
     compute_ti(DataDirs.left, DataDirs.right, ndigits_list, create_histograms)
     

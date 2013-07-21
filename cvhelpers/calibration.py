@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def calibrate_camera(images, pattern_size, square_size, chessboard_corners_results=None):
+def calibrate_camera(images, pattern_size, square_size, chessboard_corners_results):
     '''
     Conducts camera calibration using the photos of chessboard pattern
 
@@ -11,7 +11,12 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     square_size -- size of a square edge on the chessboard
     chessboard_corners_results -- a list of tuples got from the
                                   cv2.findChessboardCorners function call
-                                  for each image (default None)
+                                  for each image
+    
+    IMPORTANT: all the images passed to the function must already be 
+    filtered out, so that there is no images that didn't succeed in being
+    passed to cv2.findChessboardCorners function; use 
+    filter_chessboard_corners_results function to achieve this
     
     Returns a tuple as a result of the cv2.calibrateCamera function call,
     containing the following calibration results:
@@ -20,47 +25,51 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     
     h, w = images[0].shape
     
-    object_points, image_points = get_object_and_image_points(images, pattern_size, square_size, chessboard_corners_results)     
+    object_points = get_object_points(len(images), pattern_size, square_size)
+    image_points = get_image_points(images, chessboard_corners_results)
      
     res = cv2.calibrateCamera(object_points, image_points, (w, h))
     return res
 
-def get_object_and_image_points(images, pattern_size, square_size, chessboard_corners_results=None):
+def get_image_points(images, chessboard_corners_results):
     ''' 
-    Returns object points and image points for the given calibration task
+    Returns image points for the given calibration task
 
     Arguments:
     images -- a list of images to process
-    pattern_size -- dimmension of the chessboard pattern, e.g. (7, 8)
-    square_size -- size of a square edge on the chessboard
     chessboard_corners_results -- a list of tuples got from the
                                   cv2.findChessboardCorners function call
                                   for each image (default None)            
     '''    
-    pattern_points = get_pattern_points(pattern_size, square_size)
-    object_points = []
+    
     image_points = []
     
     for current_index in range(len(images)):
         img = images[current_index]        
-        
-        if chessboard_corners_results == None:
-            found, corners = cv2.findChessboardCorners(img, pattern_size)       
-        else:
-            found, corners = chessboard_corners_results[current_index]
-        
-        if not found:
-            continue
-        else:
-            term = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1)
-            cv2.cornerSubPix(img, corners, (5, 5), (-1, -1), term)           
+              
+        corners = chessboard_corners_results[current_index][1]
+
+        term = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1)
+        cv2.cornerSubPix(img, corners, (5, 5), (-1, -1), term)           
         
         image_points.append(corners.reshape(-1, 2))
-        object_points.append(pattern_points)
         
-    return (object_points, image_points)
+    return image_points
     
-    
+def get_object_points(num_images, pattern_size, square_size):
+    ''' 
+    Returns object points for the given calibration task
+
+    Arguments:
+    num_images -- number of images to process
+    pattern_size -- dimmension of the chessboard pattern, e.g. (7, 8)
+    square_size -- size of a square edge on the chessboard
+    '''
+    pattern_points = get_pattern_points(pattern_size, square_size)
+    object_points = [pattern_points for i in range(num_images)]
+    return object_points
+
+
 def get_pattern_points(pattern_size, square_size):
     '''
     Returns a matrix of the pattern points for using in the
@@ -74,6 +83,17 @@ def get_pattern_points(pattern_size, square_size):
     pattern_points[:,:2] = np.indices(pattern_size).T.reshape(-1, 2)
     pattern_points *= square_size
     return pattern_points
+
+def filter_chessboard_corners_results(chessboard_corners_results, images):
+    ''' Filter out the images that failed during the cv2.findChessboardCorners call'''
+    found = [res[0] for res in chessboard_corners_results]
+    filtered_images = []
+    filtered_chessboard_corners_results = []
+    for i in range(len(found)):
+        if found[i]:
+            filtered_images.append(images[i])
+            filtered_chessboard_corners_results.append(chessboard_corners_results[i])
+    return (filtered_images, filtered_chessboard_corners_results)
 
 def get_camera_intrinsic_parameters(camera_matrix):
     '''
