@@ -32,10 +32,6 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     res = cv2.calibrateCamera(object_points, image_points, (w, h))
     return res
 
-
-#def undistort_images(images, camera_matrix, dist_coefs):
-#    undistort_map = cv2.initUndistortRectifyMap()
-
 def get_image_points(images, chessboard_corners_results):
     ''' 
     Returns image points for the given calibration task

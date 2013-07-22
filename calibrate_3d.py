@@ -42,8 +42,10 @@ if __name__ == '__main__':
     fm2 = cv2.findFundamentalMat(corners_left_f[0][1], corners_right_f[0][1])
     
     ''' STEREO RECTIFICATION '''
+    print 'Performing stereo rectification'
     image_size = images.get_image_size(images_left_f[0])
     rect_res = sv.stereo_rectify(intrinsics_left, intrinsics_right, image_size, R, T)
+    R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = rect_res
     
-    
+    new_images = sv.undistort_and_rectify(images_left_f, images_right_f, intrinsics_left, intrinsics_right, (R1, R2), (P1, P2))
     
