@@ -14,13 +14,13 @@ def initialize_parameters(args=None):
         imageset_name = args.imageset
         imageset = getattr(params.ImageSets, imageset_name)
     
-    images_mask, pattern_size, square_size, data_file, experiment_name = imageset
+    images_mask, pattern_size, square_size, experiment_name = imageset
     results_dir = p.results_dir
     
-    return (images_mask, pattern_size, square_size, data_file, sample_size, num_of_samples, results_dir, experiment_name)
+    return (images_mask, pattern_size, square_size, sample_size, num_of_samples, results_dir, experiment_name)
 
-def start_experiment(images_mask, pattern_size, square_size, data_file, sample_size, num_of_samples, results_dir, experiment_name):
-    calexp.different_samples_experiment(images_mask, pattern_size, square_size, data_file, sample_size, num_of_samples, results_dir, experiment_name)
+def start_experiment(images_mask, pattern_size, square_size, sample_size, num_of_samples, results_dir, experiment_name):
+    calexp.different_samples_experiment(images_mask, pattern_size, square_size, sample_size, num_of_samples, results_dir, experiment_name)
     
 if __name__ == '__main__':
     

@@ -6,11 +6,10 @@ import random
 import numpy as np
 import cv2
 import os
-import cPickle as pickle
 import csv
 import time
 
-def different_samples_experiment(images_mask, pattern_size, square_size, data_file, sample_size, num_of_tests, experiments_dir, experiment_name):
+def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, num_of_tests, experiments_dir, experiment_name):
     ''' 
     Conducts an experiment on a given set of images with invoking the calibration
     algorithm on a number of samples of randomly chosen images from the set. 
@@ -34,17 +33,8 @@ def different_samples_experiment(images_mask, pattern_size, square_size, data_fi
     os.makedirs(results_dir)
     
     ''' Open the images and find chessboard corners on them '''
-    if not os.path.exists(data_file):
-        opened_images = images.open_images_from_mask(images_mask)
-        chessboard_corners_results = [cv2.findChessboardCorners(img, pattern_size) for img in opened_images]    
-        with open(data_file, 'wb') as f:
-            pickle.dump(opened_images, f)
-            pickle.dump(chessboard_corners_results, f)
-    else:
-        with open(data_file, 'rb') as f:
-            print 'Loading from file %s' % data_file
-            opened_images = pickle.load(f)
-            chessboard_corners_results = pickle.load(f)
+    opened_images = images.open_images_from_mask(images_mask)
+    chessboard_corners_results = [cv2.findChessboardCorners(img, pattern_size) for img in opened_images]        
     
     ''' Filter out the images that failed during the cv2.findChessboardCorners call'''    
     filtered_chessboard_corners_results, filtered_images = chessboard.filter_chessboard_corners_results(chessboard_corners_results, opened_images)   
