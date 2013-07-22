@@ -8,6 +8,7 @@ import cv2
 import os
 import csv
 import time
+import sys
 
 def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, num_of_tests, experiments_dir, experiment_name):
     ''' 
@@ -33,6 +34,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     os.makedirs(results_dir)
     
     ''' Open the images and find chessboard corners on them '''
+    print 'Opening images and finding chessboard corners'
     opened_images = images.open_images_from_mask(images_mask)
     chessboard_corners_results = [cv2.findChessboardCorners(img, pattern_size) for img in opened_images]        
     
@@ -40,6 +42,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     filtered_chessboard_corners_results, filtered_images = chessboard.filter_chessboard_corners_results(chessboard_corners_results, opened_images)   
             
     ''' Calibrate camera '''
+    print 'Calibrating the camera (all images)'
     res = calibration.calibrate_camera(filtered_images, pattern_size, square_size, filtered_chessboard_corners_results)    
     res_table = [calibration.get_calibration_results_as_a_tuple(res)]     
     with open(os.path.join(results_dir, 'all_images_calibration.csv'), 'wb') as f:    
@@ -54,6 +57,8 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
 
     res_table = []
     
+    print 'Calibrating the camera using random samples of images:'
+    sample_index = 1
     for t in tests:
         sample_images = [filtered_images[el] for el in t]
         sample_corners = [filtered_chessboard_corners_results[el] for el in t]
@@ -61,6 +66,10 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
         res = calibration.calibrate_camera(sample_images, pattern_size, square_size, sample_corners)
         res_row = calibration.get_calibration_results_as_a_tuple(res)
         res_table.append(res_row)
+        
+        sys.stdout.write('%d ' % sample_index)
+        sample_index += 1
+    print '\n'
     
     with open(os.path.join(results_dir, 'samples_calibration.csv'), 'wb') as calib_res_file:
         write_calibration_results_to_file(res_table, calib_res_file)

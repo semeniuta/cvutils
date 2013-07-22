@@ -5,7 +5,7 @@ import cv2
 
 def calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, chessboard_corners_results_left, chessboard_corners_results_right):    
     ''' 
-    Conducts calibration of a stereo vision ystem using the photos 
+    Conducts calibration of a stereo vision system using the photos 
     of chessboard pattern taken by left and right cameras
 
     Arguments:
@@ -49,8 +49,6 @@ def calibrate_stereo_vision_system(images_left, images_right, pattern_size, squa
      - image size
     '''
     
-    print 'Preparing data'
-    
     lr_images = [images_left, images_right]        
 
     object_points = calibration.get_object_points(len(lr_images[0]), pattern_size, square_size)    
@@ -69,7 +67,6 @@ def calibrate_stereo_vision_system(images_left, images_right, pattern_size, squa
     ''' 
     Performing stereo calibration    
     '''
-    print 'Performing stereo calibration'    
     res = cv2.stereoCalibrate(object_points, lr_image_points[0], lr_image_points[1], image_size, lr_camera_matrices[0], lr_dist_coefs[0], lr_camera_matrices[1], lr_dist_coefs[1])
     return res
     
@@ -80,7 +77,8 @@ def stereo_rectify(intrinsics_left, intrinsics_right, image_size, rotation_matri
     res = cv2.stereoRectify(camera_matrix_left, dist_coefs_left, camera_matrix_right, dist_coefs_right, image_size, rotation_matrix, translation_vector)
     return res
     
-
+def undistort_and_rectify():
+    
 
     
     

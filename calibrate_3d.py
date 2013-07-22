@@ -34,6 +34,7 @@ if __name__ == '__main__':
     corners_left_f, corners_right_f, images_left_f, images_right_f = chessboard.filter_chessboard_corners_results_stereo(corners_left, corners_right, images_left, images_right)
     
     ''' STEREO CALIBRATION '''    
+    print 'Performing stereo calibration'    
     res = sv.calibrate_stereo_vision_system(images_left_f, images_right_f, pattern_size, square_size, intrinsics_left, intrinsics_right, corners_left_f, corners_right_f)
     R, T, E, F = res[5:]
 
