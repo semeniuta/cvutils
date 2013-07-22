@@ -46,3 +46,10 @@ def file_is_image(filename):
     mt = mimetypes.guess_type(filename)
     return mt[0].split('/')[0] == 'image'
     
+def get_image_size(img):
+    '''
+    Retuns image size in pixels as a tuple with width and height length    
+    '''
+    h, w = img.shape
+    return (w, h)
+    

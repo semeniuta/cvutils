@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from cvhelpers import calibration
+from cvhelpers import images
 import cv2
 
 def calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, chessboard_corners_results_left, chessboard_corners_results_right):    
@@ -40,7 +41,7 @@ def calibrate_stereo_vision_system(images_left, images_right, pattern_size, squa
 
     
     '''
-    Gather arguments for cv2.stereoCalibrate function call:
+    Gathering arguments for cv2.stereoCalibrate function call:
      - object points
      - image points for both cameras
      - camera matrices for both cameras
@@ -63,14 +64,24 @@ def calibrate_stereo_vision_system(images_left, images_right, pattern_size, squa
     lr_camera_matrices = [intrinsics_left[0], intrinsics_right[0]]
     lr_dist_coefs = [intrinsics_left[1], intrinsics_right[1]]
     
-    h, w = images_left[0].shape
+    image_size = images.get_image_size(images_left[0])
     
     ''' 
     Performing stereo calibration    
     '''
     print 'Performing stereo calibration'    
-    res = cv2.stereoCalibrate(object_points, lr_image_points[0], lr_image_points[1], (w, h), lr_camera_matrices[0], lr_dist_coefs[0], lr_camera_matrices[1], lr_dist_coefs[1])
+    res = cv2.stereoCalibrate(object_points, lr_image_points[0], lr_image_points[1], image_size, lr_camera_matrices[0], lr_dist_coefs[0], lr_camera_matrices[1], lr_dist_coefs[1])
     return res
+    
+def stereo_rectify(intrinsics_left, intrinsics_right, image_size, rotation_matrix, translation_vector):
+    camera_matrix_left, dist_coefs_left = intrinsics_left    
+    camera_matrix_right, dist_coefs_right = intrinsics_right
+    print 'Performing stereo rectification'        
+    res = cv2.stereoRectify(camera_matrix_left, dist_coefs_left, camera_matrix_right, dist_coefs_right, image_size, rotation_matrix, translation_vector)
+    return res
+    
+
+
     
     
     
