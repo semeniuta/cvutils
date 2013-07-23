@@ -7,14 +7,15 @@ class Directories:
 
 class ImageSets:
     first_four = (r'D:\Dropbox\SINTEF\img\first_four\*_0.bmp', (7, 7), 2.9, 'first_four')
-    opencv_sample = (r'D:\Dropbox\SINTEF\img\opencv_sample\left*.jpg', (9, 6), 1.0, 'opencv_sample')
+    opencv_sample_left = (r'D:\Dropbox\SINTEF\img\opencv_sample\left*.jpg', (9, 6), 1.0, 'opencv_sample_left')
+    opencv_sample_right = (r'D:\Dropbox\SINTEF\img\opencv_sample\right*.jpg', (9, 6), 1.0, 'opencv_sample_right')
     new_set_1 = (r'D:\Dropbox\SINTEF\img\Camera1-1\*.bmp', (8, 7), 2.9, 'new_set_left')
     new_set_2 = (r'D:\Dropbox\SINTEF\img\Camera2-1\*.bmp', (8, 7), 2.9, 'new_set_right')
 
 class CalibrationExperiment:
     sample_size = 7
     num_of_samples = 300    
-    imageset = ImageSets.opencv_sample    
+    imageset = ImageSets.opencv_sample_left   
     results_dir = Directories.experiment_results
     
 class DataDirs:

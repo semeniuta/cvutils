@@ -4,7 +4,6 @@ from cvhelpers import images
 from cvhelpers import output
 import random
 import numpy as np
-import cv2
 import os
 import csv
 import time

@@ -16,7 +16,7 @@ def find_chessboard_corners(images, pattern_size):
         found, corners = res
         if found:
             term = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1)
-            cv2.cornerSubPix(img, corners, (5, 5), (-1, -1), term)      
+            cv2.cornerSubPix(img, corners, (11, 11), (-1, -1), term)      
             
     return chessboard_corners_results
 
