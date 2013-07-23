@@ -32,12 +32,7 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
      
     res = cv2.calibrateCamera(object_points, image_points, image_size)
     return res
-
-#def undistort_images(images, intrinsics):
-#    undistorted_images = []    
-#    for img in images:
         
-
 def get_image_points(images, chessboard_corners_results):
     ''' 
     Returns image points for the given calibration task

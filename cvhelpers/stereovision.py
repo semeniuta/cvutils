@@ -67,9 +67,9 @@ def calibrate_stereo_vision_system(images_left, images_right, pattern_size, squa
     ''' 
     Performing stereo calibration    
     '''
-    flag = cv2.CALIB_FIX_ASPECT_RATIO + cv2.CALIB_ZERO_TANGENT_DIST + cv2.CALIB_SAME_FOCAL_LENGTH + cv2.CALIB_RATIONAL_MODEL + cv2.CALIB_FIX_K3+ cv2.CALIB_FIX_K4+ cv2.CALIB_FIX_K5
+    algorithm = cv2.CALIB_FIX_ASPECT_RATIO + cv2.CALIB_ZERO_TANGENT_DIST + cv2.CALIB_SAME_FOCAL_LENGTH + cv2.CALIB_RATIONAL_MODEL + cv2.CALIB_FIX_K3+ cv2.CALIB_FIX_K4+ cv2.CALIB_FIX_K5
     term = (cv2.TERM_CRITERIA_MAX_ITER+cv2.TERM_CRITERIA_EPS, 100, 1e-5)
-    res = cv2.stereoCalibrate(object_points, lr_image_points[0], lr_image_points[1], image_size, lr_camera_matrices[0], lr_dist_coefs[0], lr_camera_matrices[1], lr_dist_coefs[1], criteria=term, flags=flag)
+    res = cv2.stereoCalibrate(object_points, lr_image_points[0], lr_image_points[1], image_size, lr_camera_matrices[0], lr_dist_coefs[0], lr_camera_matrices[1], lr_dist_coefs[1], criteria=term, flags=algorithm)
     return res
     
 def stereo_rectify(intrinsics_left, intrinsics_right, image_size, rotation_matrix, translation_vector):
@@ -96,7 +96,7 @@ def undistort_and_rectify(images_left, images_right, intrinsics_left, intrinsics
     lr_dist_coefs = [intrinsics_left[1], intrinsics_right[1]]
     
     image_size = images.get_image_size(images_left[0])    
-    m1type = cv2.CV_32FC1
+    m1type = cv2.CV_16SC2
     lr_maps = [cv2.initUndistortRectifyMap(lr_camera_matrices[i], lr_dist_coefs[i], r_rect[i], p_rect[i], image_size, m1type) for i in range(2)]
     maps_left, maps_right = lr_maps    
     
