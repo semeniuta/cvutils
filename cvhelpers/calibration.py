@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from cvhelpers import images
 
 def calibrate_camera(images, pattern_size, square_size, chessboard_corners_results):
     '''
@@ -24,12 +25,12 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     rms, camera_matrix, dist_coefs, rvecs, tvecs
     '''
     
-    h, w = images[0].shape
+    image_size = images.get_image_size(images[0])
     
     object_points = get_object_points(len(images), pattern_size, square_size)
     image_points = get_image_points(images, chessboard_corners_results)
      
-    res = cv2.calibrateCamera(object_points, image_points, (w, h))
+    res = cv2.calibrateCamera(object_points, image_points, image_size)
     return res
 
 def get_image_points(images, chessboard_corners_results):
