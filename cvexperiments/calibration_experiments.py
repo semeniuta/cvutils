@@ -36,7 +36,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     ''' Open the images and find chessboard corners on them '''
     print 'Opening images and finding chessboard corners'
     opened_images = images.open_images_from_mask(images_mask)
-    chessboard_corners_results = [cv2.findChessboardCorners(img, pattern_size) for img in opened_images]        
+    chessboard_corners_results = chessboard.find_chessboard_corners(opened_images, pattern_size)
     
     ''' Filter out the images that failed during the cv2.findChessboardCorners call'''       
     filtered_chessboard_corners_results, filtered_images = chessboard.filter_chessboard_corners_results(chessboard_corners_results, opened_images)   

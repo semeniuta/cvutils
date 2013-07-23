@@ -45,14 +45,7 @@ def get_image_points(images, chessboard_corners_results):
     
     image_points = []
     
-    for current_index in range(len(images)):
-        img = images[current_index]        
-              
-        corners = chessboard_corners_results[current_index][1]
-
-        term = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1)
-        cv2.cornerSubPix(img, corners, (5, 5), (-1, -1), term)           
-        
+    for found, corners in chessboard_corners_results:
         image_points.append(corners.reshape(-1, 2))
         
     return image_points

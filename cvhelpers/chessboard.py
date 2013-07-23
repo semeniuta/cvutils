@@ -1,5 +1,26 @@
 # -*- coding: utf-8 -*-
 
+import cv2
+
+def find_chessboard_corners(images, pattern_size):
+    ''' 
+    Finds chessboard corners on each image from the specified list. 
+    Returns a list of tuples, returned from  
+    cv2.findChessboardCorners function
+    '''    
+    chessboard_corners_results = []
+    for img in images:
+        res = cv2.findChessboardCorners(img, pattern_size) 
+        chessboard_corners_results.append(res)
+        
+        found, corners = res
+        if found:
+            term = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1)
+            cv2.cornerSubPix(img, corners, (5, 5), (-1, -1), term)      
+            
+    return chessboard_corners_results
+
+
 def filter_chessboard_corners_results(chessboard_corners_results, images):
     ''' 
     Filter out the images that failed during the cv2.findChessboardCorners call
