@@ -49,3 +49,7 @@ if __name__ == '__main__':
     
     new_images = sv.undistort_and_rectify(images_left_f, images_right_f, intrinsics_left, intrinsics_right, (R1, R2), (P1, P2))
     
+    im1 = new_images[0][0]
+    im2 = new_images[1][0]
+    
+    

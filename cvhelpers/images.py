@@ -53,3 +53,10 @@ def get_image_size(img):
     h, w = img.shape
     return (w, h)
     
+def save_image(img, filename):
+    '''
+    Saves the image in array representation into specified file    
+    '''
+    pil_image = Image.fromarray(img)
+    pil_image.save(filename)
+    

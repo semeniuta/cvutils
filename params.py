@@ -3,6 +3,7 @@
 class Directories:
     pickle_data = r'D:\Dropbox\SINTEF\pickle_data'
     experiment_results = r'D:\Dropbox\SINTEF\experiments'
+    rectified_images = r'D:\Dropbox\SINTEF\rectified'
 
 class ImageSets:
     first_four = (r'D:\Dropbox\SINTEF\img\first_four\*_0.bmp', (7, 7), 2.9, 'first_four')
