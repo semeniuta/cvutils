@@ -8,6 +8,7 @@ from cvhelpers import chessboard
 from cvhelpers import calibration
 import os
 import time
+import cv2
 
 def unpickle_data(filename):
     with open(filename, 'rb') as f:
@@ -72,8 +73,15 @@ if __name__ == '__main__':
         
     print 'Performing stereo rectification'
     image_size = images.get_image_size(images_left[0])
-    rect_res = sv.stereo_rectify(intrinsics_left, intrinsics_right, image_size, R, T)
+    rect_res = sv.compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, R, T)
     R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = rect_res
+    
+    print 'Performing stereo rectification (without prior calibration)'
+    cm_left = intrinsics_left[0]
+    cm_right = intrinsics_right[0]
+    points_left = corners_left[0][1]
+    points_right = corners_right[0][1]
+    R1_uc, R2_uc = sv.compute_rectification_transforms_uncalibrated(cm_left, cm_right, points_left, points_right, image_size)    
     
     new_images = sv.undistort_and_rectify(images_left, images_right, intrinsics_left, intrinsics_right, (R1, R2), (P1, P2))
     

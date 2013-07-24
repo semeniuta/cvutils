@@ -2,6 +2,7 @@
 from cvhelpers import calibration
 from cvhelpers import images
 import cv2
+from numpy.linalg.linalg import inv
 
 def calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, chessboard_corners_results_left, chessboard_corners_results_right):    
     ''' 
@@ -72,14 +73,50 @@ def calibrate_stereo_vision_system(images_left, images_right, pattern_size, squa
     res = cv2.stereoCalibrate(object_points, lr_image_points[0], lr_image_points[1], image_size, lr_camera_matrices[0], lr_dist_coefs[0], lr_camera_matrices[1], lr_dist_coefs[1], criteria=term, flags=algorithm)
     return res
     
-def stereo_rectify(intrinsics_left, intrinsics_right, image_size, rotation_matrix, translation_vector):
+def compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, rotation_matrix, translation_vector):
+    '''
+    Computes rectification transforms for stereo vision system
+
+    Arguments:
+    intrinsics_left -- a tuple (camera_matrix_left, dist_coefs_left)
+                       containing left camera intrinsic parameters: 
+                       camera matrix and distortion coeffitient     
+    intrinsics_right -- a tuple (camera_matrix_right, dist_coefs_right)
+                        containing right camera intrinsic parameters: 
+                        camera matrix and distortion coeffitient 
+    image_size -- a tuple describing the size of an image in pixels
+                  (returned by cvhelpers.images.get_image_size function)
+    rotation_matrix -- rotation matrix between left and right camera
+                       coordinate systems
+    translation_vector -- translation vector between left and right camera
+                          coordinate systems
+                          
+    Returns a tuple as a result of the cv2.stereoRectify function call,
+    containing the following results:
+    R1, R2, P1, P2, Q, validPixROI1, validPixROI2
+    '''    
     camera_matrix_left, dist_coefs_left = intrinsics_left    
     camera_matrix_right, dist_coefs_right = intrinsics_right        
     res = cv2.stereoRectify(camera_matrix_left, dist_coefs_left, camera_matrix_right, dist_coefs_right, image_size, rotation_matrix, translation_vector)
     return res
     
+def compute_rectification_transforms_uncalibrated(camera_matrix_left, camera_matrix_right, points_left, points_right, image_size, fund_matrix=None):
+    ''' 
+    A wrapper around cv2.stereoRectifyUncalibrated function    
+    '''    
+    if fund_matrix == None:
+        fund_matrix = cv2.findFundamentalMat(points_left, points_right)[0]
+    
+    retval, h_left, h_right = cv2.stereoRectifyUncalibrated(points_left, points_right, fund_matrix, image_size)
+    r_left = inv(camera_matrix_left) * h_left * camera_matrix_left 
+    r_right = inv(camera_matrix_right) * h_right * camera_matrix_right
+    return (r_left, r_right)
+    
 def undistort_and_rectify(images_left, images_right, intrinsics_left, intrinsics_right, r_rect, p_rect):
     ''' 
+    Conducts undistortion and rectification processes on two sets of images
+    (from left and right cameras)    
+    
     Agruments:
     intrinsics_left -- a tuple (camera_matrix_left, dist_coefs_left)
                        containing left camera intrinsic parameters: 
@@ -89,7 +126,11 @@ def undistort_and_rectify(images_left, images_right, intrinsics_left, intrinsics
                         camera matrix and distortion coeffitient
     r_rect -- a tuple containing rectification rotation matrices for left and 
               right image planes
-    p_rect -- a tuple containing left and right projection equation matrices 
+    p_rect -- a tuple containing left and right projection equation matrices
+    
+    Returns tuple (images_left_rect, images_right_rect) containing lists of 
+    undistorted and rectified images (for left and right cameras respectively)
+    in matrix form
     '''
     
     lr_camera_matrices = [intrinsics_left[0], intrinsics_right[0]]
