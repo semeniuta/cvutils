@@ -31,6 +31,13 @@ def calculate_intrinsics(images_left, images_right, corners_left, corners_right,
     intrinsics_right = calibration.calibrate_camera(images_right, pattern_size, square_size, corners_right)[1:3]
     return (intrinsics_left, intrinsics_right)
     
+def rectify_uncalibrated(intrinsics_left, intrinsics_right, corners_left, corners_right, image_size):
+    cm_left, dc_left = intrinsics_left
+    cm_right, dc_right = intrinsics_right
+    points_left = cv2.undistortPoints(corners_left[0][1], cm_left, dc_left)
+    points_right = cv2.undistortPoints(corners_right[0][1], cm_right, dc_right)
+    R1_uc, R2_uc = sv.compute_rectification_transforms_uncalibrated(cm_left, cm_right, points_left, points_right, image_size)    
+    
 def save_rectified_images(new_images):
     timelabel = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(time.time()))        
     savedir = Directories.rectified_images
@@ -76,12 +83,8 @@ if __name__ == '__main__':
     rect_res = sv.compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, R, T)
     R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = rect_res
     
-    print 'Performing stereo rectification (without prior calibration)'
-    cm_left = intrinsics_left[0]
-    cm_right = intrinsics_right[0]
-    points_left = corners_left[0][1]
-    points_right = corners_right[0][1]
-    R1_uc, R2_uc = sv.compute_rectification_transforms_uncalibrated(cm_left, cm_right, points_left, points_right, image_size)    
+    #print 'Performing stereo rectification (without prior calibration)'
+    #R1_uc, R2_uc = rectify_uncalibrated(intrinsics_left, intrinsics_right, corners_left, corners_right, image_size)
     
     new_images = sv.undistort_and_rectify(images_left, images_right, intrinsics_left, intrinsics_right, (R1, R2), (P1, P2))
     

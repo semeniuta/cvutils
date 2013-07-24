@@ -32,6 +32,20 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
      
     res = cv2.calibrateCamera(object_points, image_points, image_size)
     return res
+
+def undistort_images(images, intrinsics):
+        
+    camera_matrix, dist_coefs = intrinsics
+    r = np.eye(3)
+    image_size = get_image_size(images[0])
+    m1type = cv2.CV_16SC2
+    
+    mapx, mapy = cv2.initUndistortRectifyMap(camera_matrix, dist_coefs, r, camera_matrix, image_size, m1type)
+    interp_method = cv2.INTER_LINEAR
+    undistorted_images = [cv2.remap(img, mapx, mapy, interp_method) for img in images]
+    
+    return undistorted_images
+    
         
 def get_image_points(images, chessboard_corners_results):
     ''' 
