@@ -60,3 +60,9 @@ def save_image(img, filename):
     pil_image = Image.fromarray(img)
     pil_image.save(filename)
     
+def save_images_to_dir(images, directory, mask='%d.jpg'):
+    os.makedirs(directory)
+    
+    for i in range(len(images)):
+        save_image(images[i], os.path.join(directory, mask % i))
+    

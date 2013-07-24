@@ -44,15 +44,10 @@ def save_rectified_images(new_images):
     savedir = Directories.rectified_images
     savedir_left = os.path.join(savedir, timelabel + '_LEFT')
     savedir_right = os.path.join(savedir, timelabel + '_RIGHT')
-        
-    os.makedirs(savedir_left)
-    os.makedirs(savedir_right)
-        
+            
     rectimg_left, rectimg_right = new_images
-    for i in range(len(rectimg_left)):
-        images.save_image(rectimg_left[i], os.path.join(savedir_left, '%d.jpg' % i))
-    for i in range(len(rectimg_right)):
-        images.save_image(rectimg_right[i], os.path.join(savedir_right, '%d.jpg' % i))
+    images.save_images_to_dir(rectimg_left, savedir_left)
+    images.save_images_to_dir(rectimg_right, savedir_right)
     
 if __name__ == '__main__':
     
