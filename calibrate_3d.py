@@ -6,6 +6,7 @@ from cvhelpers import stereovision as sv
 from cvhelpers import images
 from cvhelpers import chessboard
 from cvhelpers import calibration
+from cvhelpers import transform
 import os
 import time
 import cv2
@@ -86,7 +87,7 @@ if __name__ == '__main__':
     #print 'Performing stereo rectification (without prior calibration)'
     #R1_uc, R2_uc = rectify_uncalibrated(intrinsics_left, intrinsics_right, corners_left, corners_right, image_size)
     
-    new_images = sv.undistort_and_rectify(images_left, images_right, intrinsics_left, intrinsics_right, (R1, R2), (P1, P2))
+    new_images = transform.undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, (R1, R2), (P1, P2))
     
     print 'Saving images'
     save_rectified_images(new_images)
