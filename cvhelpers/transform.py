@@ -17,6 +17,22 @@ def undistort_images(images, intrinsics):
     
     return undistorted_images
 
+def undistort_chessboard_corners(corners, intrinsics):
+    '''
+    Conducts undistortion of the observed coordinates of the chessboard 
+    corners based on provided camera's intrinsic parameters
+    
+    Arguments:
+    corners -- a list of tuples resulting from cv2.findChessboardCorners 
+               function
+    intrinsics -- a tuple (camera_matrix, dist_coefs)
+                  containing intrinsic parameters of the camera: 
+                  camera matrix and distortion coeffitient  
+    '''
+    cm, dc = intrinsics
+    res = [(found, cv2.undistortPoints(matrix, cm, dc, P=cm)) for found, matrix in corners]
+    return res
+
 def undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, r_rect, p_rect):
     ''' 
     Conducts undistortion and rectification processes on two sets of images

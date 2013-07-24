@@ -9,15 +9,6 @@ def plot_image(image, show_in_grayscale=True):
     imshow(image)
     if show_in_grayscale:
         gray()
-        
-#def create_and_save_histogram(data, nbins, title, filename):
-#    ''' 
-#    Saves the histogram for the given data under the specified filename    
-#    '''
-#    plt.figure()    
-#    plt.hist(data, nbins)
-#    plt.title(title)
-#    plt.savefig(filename)
     
 def create_and_save_histogram(data, nbins, title, filename):
     ''' 
@@ -36,3 +27,6 @@ def save_current_figure(filename):
 
 def draw_vertical_line(x, color='r', linewidth=1):
     plt.axvline(x, color=color, linewidth=linewidth)
+    
+def plot_points(x, y):
+    plot(x, y, 'ro')

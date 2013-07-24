@@ -69,6 +69,10 @@ if __name__ == '__main__':
     lr_intrinsics = calculate_intrinsics(images_left, images_right, corners_left, corners_right, pattern_size, square_size)    
     intrinsics_left, intrinsics_right = lr_intrinsics
     
+    #print 'Undistorting corners results'
+    #corners_left = transform.undistort_chessboard_corners(corners_left, intrinsics_left)    
+    #corners_right = transform.undistort_chessboard_corners(corners_right, intrinsics_right)
+        
     print 'Performing stereo calibration'    
     res = sv.calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, corners_left, corners_right)
     print 'Calibration error: %f' % res[0]
@@ -77,11 +81,7 @@ if __name__ == '__main__':
     print 'Performing stereo rectification'
     image_size = images.get_image_size(images_left[0])
     rect_res = sv.compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, R, T)
-    R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = rect_res
-    
-    #print 'Performing stereo rectification (without prior calibration)'
-    #R1_uc, R2_uc = rectify_uncalibrated(intrinsics_left, intrinsics_right, corners_left, corners_right, image_size)
-    
+    R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = rect_res    
     new_images = transform.undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, (R1, R2), (P1, P2))
     
     print 'Saving images'
