@@ -19,8 +19,11 @@ def initialize_parameters(args=None):
     
     imagemasks = (imageset_left[0], imageset_right[0])
     pattern_size, square_size = imageset_left[1:3]
+
+    get_intrinsics_method = args.intrinsics     
+    saverect = args.saverect
     
-    return (imagemasks, pattern_size, square_size)
+    return (imagemasks, pattern_size, square_size, get_intrinsics_method, saverect)
 
 def get_imageset(name):
     return getattr(params.ImageSets, name)
@@ -33,6 +36,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--imageset-left', help='a masked string defining the path to the image set for the left camera')  
     parser.add_argument('--imageset-right', help='a masked string defining the path to the image set for the right camera')
+    parser.add_argument('--intrinsics', default='compute', choices=['compute', 'read'])    
+    parser.add_argument('--saverect', action='store_true')
     args = parser.parse_args()    
     
     parameters = initialize_parameters(args)

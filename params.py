@@ -19,12 +19,15 @@ class CalibrationExperiment:
     results_dir = Directories.experiment_results
 
 class DataDirsTI:
-    left = r'D:\Dropbox\SINTEF\experiments\LEFT_20x2000'
-    right = r'D:\Dropbox\SINTEF\experiments\RIGHT_20x2000'
+    left = r'D:\Dropbox\SINTEF\experiments\opencv_sample_left_7x1000'
+    right = r'D:\Dropbox\SINTEF\experiments\opencv_sample_right_7x1000'
 
 class SVSParametrization:
     imageset_left = ImageSets.opencv_sample_left
     imageset_right = ImageSets.opencv_sample_right
+    datadir_left = r'D:\Dropbox\SINTEF\experiments\opencv_sample_left_7x1000'
+    datadir_right = r'D:\Dropbox\SINTEF\experiments\opencv_sample_right_7x1000'
+    rectified_images_dir = Directories.rectified_images
     
     
     

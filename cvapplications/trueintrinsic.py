@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cvexperiments import statsfuncs as sf
+from cvapplications import statsfuncs as sf
 from cvfunctions import calibration
 import pandas
 

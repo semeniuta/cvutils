@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cPickle as pickle
-from params import SVSParametrization, DataDirsTI, Directories
+from params import SVSParametrization as p
 from cvfunctions import stereovision as sv
 from cvfunctions import images
 from cvfunctions import chessboard
@@ -12,7 +12,7 @@ import time
 import cv2
 from cvclasses.stereovisionsystem import StereoVisionSystem
 
-def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size):
+def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size, get_intrinsics_method, saverect):
     
     print 'Opening images'    
     images_left, images_right = open_images(imagemasks)
@@ -22,8 +22,12 @@ def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size):
     corners_right = chessboard.find_chessboard_corners(images_right, pattern_size)
     corners_left, corners_right, images_left, images_right = chessboard.filter_chessboard_corners_results_stereo(corners_left, corners_right, images_left, images_right)
     
-    print "Determining cameras' intrinsic parameters"
-    lr_intrinsics = calculate_intrinsics(images_left, images_right, corners_left, corners_right, pattern_size, square_size)    
+    if get_intrinsics_method == 'compute':
+        print "Computing cameras' intrinsic parameters"
+        lr_intrinsics = compute_intrinsics(images_left, images_right, corners_left, corners_right, pattern_size, square_size)    
+    elif get_intrinsics_method == 'read':
+        print "Reading cameras' intrinsic parameters"
+        lr_intrinsics = unpickle_intrinsics()
     intrinsics_left, intrinsics_right = lr_intrinsics
             
     print 'Performing stereo calibration'
@@ -38,8 +42,9 @@ def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size):
     svs.set_rectification_transforms(rect_res)    
     new_images = transform.undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, svs.rotation_matrices, svs.projection_matrices)
     
-    print 'Saving images'
-    save_rectified_images(new_images)
+    if saverect:
+        print 'Saving images'
+        save_rectified_images(new_images)
 
 def unpickle_data(filename):
     with open(filename, 'rb') as f:
@@ -53,11 +58,11 @@ def open_images(imagemasks):
     
 def unpickle_intrinsics():
 
-    intrinsics_left = unpickle_data(os.path.join(DataDirsTI.left, 'intrinsics.pickle'))
-    intrinsics_right = unpickle_data(os.path.join(DataDirsTI.right, 'intrinsics.pickle'))         
+    intrinsics_left = unpickle_data(os.path.join(p.datadir_left, 'intrinsics.pickle'))
+    intrinsics_right = unpickle_data(os.path.join(p.datadir_right, 'intrinsics.pickle'))         
     return (intrinsics_left, intrinsics_right)
 
-def calculate_intrinsics(images_left, images_right, corners_left, corners_right, pattern_size, square_size):
+def compute_intrinsics(images_left, images_right, corners_left, corners_right, pattern_size, square_size):
     intrinsics_left = calibration.calibrate_camera(images_left, pattern_size, square_size, corners_left)[1:3]    
     intrinsics_right = calibration.calibrate_camera(images_right, pattern_size, square_size, corners_right)[1:3]
     return (intrinsics_left, intrinsics_right)
@@ -71,7 +76,7 @@ def rectify_uncalibrated(intrinsics_left, intrinsics_right, corners_left, corner
     
 def save_rectified_images(new_images):
     timelabel = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(time.time()))        
-    savedir = Directories.rectified_images
+    savedir = p.rectified_images_dir
     savedir_left = os.path.join(savedir, timelabel + '_LEFT')
     savedir_right = os.path.join(savedir, timelabel + '_RIGHT')
             
