@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from cvapplications import trueintrinsic as ti
-from cvhelpers import output
+from cvfunctions import output
 import pandas
 import os
 from xlsxwriter.workbook import Workbook

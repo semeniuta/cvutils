@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from cvhelpers.images import get_image_size
+from cvfunctions.images import get_image_size
 
 def calibrate_camera(images, pattern_size, square_size, chessboard_corners_results):
     '''
@@ -17,7 +17,7 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
     IMPORTANT: all the images passed to the function must already be 
     filtered out, so that there is no images that didn't succeed in being
     passed to cv2.findChessboardCorners function; use 
-    cvhelpers.chessboard.filter_chessboard_corners_results function
+    cvfunctions.chessboard.filter_chessboard_corners_results function
     to achieve this
     
     Returns a tuple as a result of the cv2.calibrateCamera function call,

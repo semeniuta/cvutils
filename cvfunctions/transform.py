@@ -2,7 +2,7 @@
 
 import numpy as np
 import cv2
-from cvhelpers.images import get_image_size
+from cvfunctions.images import get_image_size
 
 def undistort_images(images, intrinsics):
     ''' 

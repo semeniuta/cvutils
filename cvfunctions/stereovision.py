@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from cvhelpers import calibration
-from cvhelpers import images
+from cvfunctions import calibration
+from cvfunctions import images
 import cv2
 from numpy.linalg.linalg import inv
 
@@ -31,7 +31,7 @@ def calibrate_stereo_vision_system(images_left, images_right, pattern_size, squa
     IMPORTANT: all the images passed to the function must already be 
     filtered out, so that there is no images that didn't succeed in being
     passed to cv2.findChessboardCorners function; use 
-    cvhelpers.chessboard.filter_chessboard_corners_results_stereo function
+    cvfunctions.chessboard.filter_chessboard_corners_results_stereo function
     to achieve this
     
     Returns a tuple as a result of the cv2.stereoCalibrate function call,
@@ -85,7 +85,7 @@ def compute_rectification_transforms(intrinsics_left, intrinsics_right, image_si
                         containing right camera intrinsic parameters: 
                         camera matrix and distortion coeffitient 
     image_size -- a tuple describing the size of an image in pixels
-                  (returned by cvhelpers.images.get_image_size function)
+                  (returned by cvfunctions.images.get_image_size function)
     rotation_matrix -- rotation matrix between left and right camera
                        coordinate systems
     translation_vector -- translation vector between left and right camera

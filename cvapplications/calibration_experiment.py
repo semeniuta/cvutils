@@ -1,7 +1,7 @@
-from cvhelpers import calibration
-from cvhelpers import chessboard
-from cvhelpers import images
-from cvhelpers import output
+from cvfunctions import calibration
+from cvfunctions import chessboard
+from cvfunctions import images
+from cvfunctions import output
 import random
 import numpy as np
 import os

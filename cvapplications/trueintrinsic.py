@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cvexperiments import statsfuncs as sf
-from cvhelpers import calibration
+from cvfunctions import calibration
 import pandas
 
 def find_true_intrinsics(data, ndigits_list):
