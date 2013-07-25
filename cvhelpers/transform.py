@@ -5,6 +5,15 @@ import cv2
 from cvhelpers.images import get_image_size
 
 def undistort_images(images, intrinsics):
+    ''' 
+    Undistorts a set of images
+
+    Arguments:
+    images -- a set of images
+    intrinsics -- a tuple (camera_matrix, dist_coefs)
+                  containing intrinsic parameters of the camera: 
+                  camera matrix and distortion coeffitient
+    '''
         
     camera_matrix, dist_coefs = intrinsics
     r = np.eye(3)
@@ -39,6 +48,8 @@ def undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_le
     (from left and right cameras of the stereo vision system)    
     
     Agruments:
+    images_left -- a set of images from left camera
+    images_right -- a set of images from right camera
     intrinsics_left -- a tuple (camera_matrix_left, dist_coefs_left)
                        containing left camera intrinsic parameters: 
                        camera matrix and distortion coeffitient     

@@ -10,6 +10,7 @@ from cvhelpers import transform
 import os
 import time
 import cv2
+from cvclasses.stereovisionsystem import StereoVisionSystem
 
 def unpickle_data(filename):
     with open(filename, 'rb') as f:
@@ -21,7 +22,7 @@ def open_images(imageset_left, imageset_right):
     images_right = images.open_images_from_mask(imageset_right[0])
     return (images_left, images_right)
     
-def unpickle_intrinsics(unpickle=False):
+def unpickle_intrinsics():
 
     intrinsics_left = unpickle_data(os.path.join(DataDirs.left, 'intrinsics.pickle'))
     intrinsics_right = unpickle_data(os.path.join(DataDirs.right, 'intrinsics.pickle'))         
@@ -68,21 +69,18 @@ if __name__ == '__main__':
     print "Determining cameras' intrinsic parameters"
     lr_intrinsics = calculate_intrinsics(images_left, images_right, corners_left, corners_right, pattern_size, square_size)    
     intrinsics_left, intrinsics_right = lr_intrinsics
-    
-    #print 'Undistorting corners results'
-    #corners_left = transform.undistort_chessboard_corners(corners_left, intrinsics_left)    
-    #corners_right = transform.undistort_chessboard_corners(corners_right, intrinsics_right)
-        
-    print 'Performing stereo calibration'    
+            
+    print 'Performing stereo calibration'
+    svs = StereoVisionSystem()    
     res = sv.calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, corners_left, corners_right)
     print 'Calibration error: %f' % res[0]
-    R, T, E, F = res[5:]
+    svs.set_calibration_parameters(res)
         
     print 'Performing stereo rectification'
     image_size = images.get_image_size(images_left[0])
-    rect_res = sv.compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, R, T)
-    R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = rect_res    
-    new_images = transform.undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, (R1, R2), (P1, P2))
+    rect_res = sv.compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, svs.R, svs.T)
+    svs.set_rectification_transforms(rect_res)    
+    new_images = transform.undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, svs.rotation_matrices, svs.projection_matrices)
     
     print 'Saving images'
     save_rectified_images(new_images)

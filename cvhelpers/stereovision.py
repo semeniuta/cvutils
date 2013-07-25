@@ -103,6 +103,7 @@ def compute_rectification_transforms(intrinsics_left, intrinsics_right, image_si
 def compute_rectification_transforms_uncalibrated(camera_matrix_left, camera_matrix_right, points_left, points_right, image_size, fund_matrix=None):
     ''' 
     A wrapper around cv2.stereoRectifyUncalibrated function    
+    (GIVES BAD RESULTS)
     '''    
     if fund_matrix == None:
         fund_matrix = cv2.findFundamentalMat(points_left, points_right)[0]
