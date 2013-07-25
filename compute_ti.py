@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from cvexperiments import trueintrinsic as ti
+from cvapplications import trueintrinsic as ti
 from cvhelpers import output
 import pandas
 import os

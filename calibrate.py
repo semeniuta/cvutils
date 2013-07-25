@@ -1,4 +1,4 @@
-from cvexperiments import calibration_experiments as calexp
+from cvapplications import calibration_experiment as calexp
 import params
 import argparse
 
