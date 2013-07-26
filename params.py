@@ -30,5 +30,9 @@ class SVSParametrization:
     rectified_images_dir = Directories.rectified_images
     
     
+class StereoMatching:
+    pass
+    
+    
     
     

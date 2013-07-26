@@ -40,11 +40,13 @@ def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size, get_
     image_size = images.get_image_size(images_left[0])
     rect_res = sv.compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, svs.R, svs.T)
     svs.set_rectification_transforms(rect_res)    
-    new_images = transform.undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, svs.rotation_matrices, svs.projection_matrices)
-    
+
     if saverect:
-        print 'Saving images'
+        print 'Rectifying and saving images'
+        new_images = transform.undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, svs.rotation_matrices, svs.projection_matrices)
         save_rectified_images(new_images)
+    
+    return svs
 
 def unpickle_data(filename):
     with open(filename, 'rb') as f:
