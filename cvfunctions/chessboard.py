@@ -3,8 +3,9 @@
 import cv2
 from cvfunctions import output
 from cvfunctions.images import open_images_from_mask
+from glob import glob
 
-def find_chessboard_corners(images, pattern_size, searchwin_size=5, findcbc_flags=None):
+def find_chessboard_corners(images, pattern_size, searchwin_size=11, findcbc_flags=None):
     ''' 
     Finds chessboard corners on each image from the specified list. 
     Returns a list of tuples, returned from  
@@ -84,7 +85,51 @@ def open_images_and_find_corners(images_mask, pattern_size, findcbc_flags=None):
     corners_filtered, images_filtered = filter_chessboard_corners_results(chessboard_corners_results, opened_images)
     return corners_filtered, images_filtered
 
-
+def open_images_and_find_corners_universal(images_mask, pattern_size, images_mask_cam2=None, findcbc_flags=None):
+    
+    if images_mask_cam2 == None:
+        masks = [images_mask]
+    else:
+        masks = [images_mask, images_mask_cam2]
+    ncams = len(masks)
+    
+    image_files_list = []
+    opened_images_list = []
+    corners_res_list = []
+    for m in masks:
+        image_files = glob(m)
+        opened_images = open_images_from_mask(m)
+        corners_res = find_chessboard_corners(opened_images, pattern_size, findcbc_flags=findcbc_flags) 
+        
+        image_files_list.append(image_files)
+        opened_images_list.append(opened_images)    
+        corners_res_list.append(corners_res)        
+        
+    if ncams == 1:
+        indices = range(len(image_files_list[0]))
+        c, indices = filter_chessboard_corners_results(corners_res_list[0], indices)
+        images = []
+        filenames = []        
+        for i in indices:
+            images.append(opened_images_list[0][i])
+            filenames.append(image_files_list[0][i])
+        return (c, images, filenames)
+    elif ncams == 2:
+        indices1 = range(len(image_files_list[0]))
+        indices2 = range(len(image_files_list[1]))
+        arguments = (corners_res_list[0], corners_res_list[1], indices1, indices2)
+        c1, c2, indices1, indices2 = filter_chessboard_corners_results_stereo(*arguments)
+        images1 = []
+        images2 = []
+        filenames1 = []
+        filenames2 = []        
+        for i in indices1:
+            images1.append(opened_images_list[0][i])
+            filenames1.append(image_files_list[0][i])
+            images2.append(opened_images_list[1][i])
+            filenames2.append(image_files_list[1][i])
+        return (c1, c2, images1, images2, filenames1, filenames2)
+    
 def chessboard_corners_maxtrix_to_lists(matrix):
     '''
     Convert the result of the cv2.findChessboardCorners function call to 

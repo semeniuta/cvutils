@@ -9,7 +9,7 @@ import time
 import sys
 import cv2
 
-def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, nsamples, experiments_dir, experiment_name, special_flags=False):
+def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, nsamples, experiments_dir, experiment_name, special_flags=True):
     ''' 
     Conducts an experiment on a given set of images with invoking the calibration
     algorithm on a number of samples of randomly chosen images from the set. 
@@ -38,8 +38,12 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
         f = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS
     else:
         f = None
-    chessboard_corners_results, opened_images = chessboard.open_images_and_find_corners(images_mask, pattern_size, f)   
-        
+    #chessboard_corners_results, opened_images = chessboard.open_images_and_find_corners(images_mask, pattern_size, f)   
+    chessboard_corners_results, opened_images, filenames = chessboard.open_images_and_find_corners_universal(images_mask, pattern_size, findcbc_flags=f)   
+    
+    with open(os.path.join(results_dir, 'images.csv'), 'wb') as f:
+        write_images_list_to_file(filenames, f)
+    
     ''' Calibrate camera '''
     print 'Calibrating the camera (all images)'
     res = calibration.calibrate_camera(opened_images, pattern_size, square_size, chessboard_corners_results)    
@@ -97,9 +101,6 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     output.create_and_save_histogram(p2, nbins, 'p2', os.path.join(results_dir, 'p2_hist.png'))
     output.create_and_save_histogram(k3, nbins, 'k3', os.path.join(results_dir, 'k3_hist.png'))
 
-def plus_one():
-    pass
-
 def write_calibration_results_to_file(res_table, f): 
     ''' 
     Saves the result of the calibration experiment to the specified CSV file
@@ -114,4 +115,11 @@ def write_calibration_results_to_file(res_table, f):
 def write_samples_to_file(samples, f):
     w = csv.writer(f)    
     for s in samples:
-        w.writerow(s)        
+        w.writerow(s)    
+        
+def write_images_list_to_file(images_list, f):
+    w = csv.writer(f)    
+    for i in range(len(images_list)):
+        fname = images_list[i]        
+        row = [i, fname]
+        w.writerow(row)    
