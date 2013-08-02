@@ -46,7 +46,7 @@ def compute_ti(data_dir_left, data_dir_right, nbins, create_histograms):
 
 if __name__ == '__main__':
 
-    create_histograms = True
+    create_histograms = False
     nbins = 100
     
     compute_ti(DataDirsTI.left, DataDirsTI.right, nbins, create_histograms)
