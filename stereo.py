@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cvapplications.svsparametrize import parametrize_stereo_vision_system
+from cvapplications.svsparametrize2 import parametrize_stereo_vision_system
 import params
 import argparse 
 
@@ -29,16 +29,17 @@ def get_imageset(name):
     return getattr(params.ImageSets, name)
 
 def start(args):
-    parametrize_stereo_vision_system(*args)
+    svs = parametrize_stereo_vision_system(*args)
+    return svs
 
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('--imageset-left', help='a masked string defining the path to the image set for the left camera')  
-    parser.add_argument('--imageset-right', help='a masked string defining the path to the image set for the right camera')
+    parser.add_argument('--imageset-left')  
+    parser.add_argument('--imageset-right')
     parser.add_argument('--intrinsics', default='compute', choices=['compute', 'read'])    
-    parser.add_argument('--saverect', action='store_true')
+    parser.add_argument('--saverect', action='store_true', default=True)
     args = parser.parse_args()    
     
     parameters = initialize_parameters(args)
-    start(parameters)
+    svs = start(parameters)

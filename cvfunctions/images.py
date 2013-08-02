@@ -3,6 +3,7 @@ import numpy as np
 import os
 import mimetypes
 from glob import glob
+import cv2
 
 def open_image(image_file, convert_option='L', return_as_array=True):
     ''' 
@@ -57,8 +58,7 @@ def save_image(img, filename):
     '''
     Saves the image in array representation into specified file    
     '''
-    pil_image = Image.fromarray(img)
-    pil_image.save(filename)
+    cv2.imwrite(filename, img)
     
 def save_images_to_dir(images, directory, mask='%d.jpg'):
     if not os.path.exists(directory):    

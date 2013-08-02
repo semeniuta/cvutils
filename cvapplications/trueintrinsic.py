@@ -22,7 +22,9 @@ def find_true_intrinsics(data, ndigits_list):
     (2) pandas.DataFrame object with the colunms rounded in accordance to 
     ndigits_list
     '''        
-        
+    
+    print_statistics(data)    
+    
     cols = round_dataframe_columns(data, ndigits_list)
     modes = [sf.calc_mode(c) for c in cols[1:]]
     

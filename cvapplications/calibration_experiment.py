@@ -8,8 +8,9 @@ import os
 import csv
 import time
 import sys
+import cv2
 
-def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, num_of_tests, experiments_dir, experiment_name):
+def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, num_of_tests, experiments_dir, experiment_name, special_flags=True):
     ''' 
     Conducts an experiment on a given set of images with invoking the calibration
     algorithm on a number of samples of randomly chosen images from the set. 
@@ -23,6 +24,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     num_of_tests -- number of samples to be tested
     experiments_dir -- directory in which the results of the experiment are to be saved
     experiment_name -- short string defining the name of current experiment
+    special_flags -- TODo
     '''
     
     start = time.time()    
@@ -32,23 +34,22 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     results_dir = os.path.join(experiments_dir, current_dir)
     os.makedirs(results_dir)
     
-    ''' Open the images and find chessboard corners on them '''
     print 'Opening images and finding chessboard corners'
-    opened_images = images.open_images_from_mask(images_mask)
-    chessboard_corners_results = chessboard.find_chessboard_corners(opened_images, pattern_size)
-    
-    ''' Filter out the images that failed during the cv2.findChessboardCorners call'''       
-    filtered_chessboard_corners_results, filtered_images = chessboard.filter_chessboard_corners_results(chessboard_corners_results, opened_images)   
-            
+    if special_flags:
+        f = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS
+    else:
+        f = None
+    chessboard_corners_results, opened_images = calibration.open_images_and_find_corners(images_mask, pattern_size, f)   
+        
     ''' Calibrate camera '''
     print 'Calibrating the camera (all images)'
-    res = calibration.calibrate_camera(filtered_images, pattern_size, square_size, filtered_chessboard_corners_results)    
+    res = calibration.calibrate_camera(opened_images, pattern_size, square_size, chessboard_corners_results)    
     res_table = [calibration.get_calibration_results_as_a_tuple(res)]     
     with open(os.path.join(results_dir, 'all_images_calibration.csv'), 'wb') as f:    
         write_calibration_results_to_file(res_table, f)
   
     ''' Samples testing ''' 
-    num_of_images_total = len(filtered_images)
+    num_of_images_total = len(opened_images)
     tests = []
     for i in range(num_of_tests):
         sample = [random.randint(0, num_of_images_total - 1) for j in range(sample_size)]
@@ -59,8 +60,8 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     print 'Calibrating the camera using random samples of images:'
     sample_index = 1
     for t in tests:
-        sample_images = [filtered_images[el] for el in t]
-        sample_corners = [filtered_chessboard_corners_results[el] for el in t]
+        sample_images = [opened_images[el] for el in t]
+        sample_corners = [chessboard_corners_results[el] for el in t]
         
         res = calibration.calibrate_camera(sample_images, pattern_size, square_size, sample_corners)
         res_row = calibration.get_calibration_results_as_a_tuple(res)
@@ -96,7 +97,10 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     output.create_and_save_histogram(p1, nbins, 'p1', os.path.join(results_dir, 'p1_hist.png'))
     output.create_and_save_histogram(p2, nbins, 'p2', os.path.join(results_dir, 'p2_hist.png'))
     output.create_and_save_histogram(k3, nbins, 'k3', os.path.join(results_dir, 'k3_hist.png'))
-            
+
+def plus_one():
+    pass
+
 def write_calibration_results_to_file(res_table, f): 
     ''' 
     Saves the result of the calibration experiment to the specified CSV file

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+from cvfunctions import output
 
-def find_chessboard_corners(images, pattern_size):
+def find_chessboard_corners(images, pattern_size, findcbc_flags=None):
     ''' 
     Finds chessboard corners on each image from the specified list. 
     Returns a list of tuples, returned from  
@@ -10,7 +11,10 @@ def find_chessboard_corners(images, pattern_size):
     '''    
     chessboard_corners_results = []
     for img in images:
-        res = cv2.findChessboardCorners(img, pattern_size) 
+        if findcbc_flags == None:
+            res = cv2.findChessboardCorners(img, pattern_size) 
+        else:
+            res = cv2.findChessboardCorners(img, pattern_size, flags=findcbc_flags) 
         chessboard_corners_results.append(res)
         
         found, corners = res
@@ -81,3 +85,9 @@ def chessboard_corners_maxtrix_to_lists(matrix):
         x_list.append(x)
         y_list.append(y)
     return (x_list, y_list)
+    
+def plot_corners(image, corners):
+    output.plot_image(image)
+    x, y = chessboard_corners_maxtrix_to_lists(corners[1])
+    output.plot_points(x, y)
+    

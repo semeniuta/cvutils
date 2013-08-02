@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
-from cvfunctions.images import get_image_size
+from cvfunctions.images import get_image_size, open_images_from_mask
+from cvfunctions import chessboard
+
 
 def calibrate_camera(images, pattern_size, square_size, chessboard_corners_results):
     '''
@@ -32,6 +34,18 @@ def calibrate_camera(images, pattern_size, square_size, chessboard_corners_resul
      
     res = cv2.calibrateCamera(object_points, image_points, image_size)
     return res
+
+def open_images_and_find_corners(images_mask, pattern_size, findcbc_flags=None):
+    ''' 
+    Open the images and find chessboard corners on them. 
+    Then filter out the images (and corresponding corners)
+    that failed during the cv2.findChessboardCorners call 
+    '''
+    opened_images = open_images_from_mask(images_mask)
+    chessboard_corners_results = chessboard.find_chessboard_corners(opened_images, pattern_size, findcbc_flags)
+          
+    corners_filtered, images_filtered = chessboard.filter_chessboard_corners_results(chessboard_corners_results, opened_images)
+    return corners_filtered, images_filtered
         
 def get_image_points(images, chessboard_corners_results):
     ''' 

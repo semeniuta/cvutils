@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-from cvfunctions.images import open_image
+from cvfunctions.images import open_image, save_image
 from cvapplications.svsparametrize import parametrize_stereo_vision_system
 from params import SVSParametrization as p
 
@@ -14,16 +14,20 @@ def get_svs_object():
     return svs
 
 if __name__ == '__main__':
-    #svs = get_svs_object()
+    svs = get_svs_object()
     
-    img_left = open_image(r'D:\Dropbox\SINTEF\rectified\LEFT\11.jpg')
-    img_right = open_image(r'D:\Dropbox\SINTEF\rectified\RIGHT\11.jpg')
+    img_left = open_image(r'D:\Dropbox\SINTEF\rectified\LEFT\5.jpg')
+    img_right = open_image(r'D:\Dropbox\SINTEF\rectified\RIGHT\5.jpg')
     
     preset = cv2.STEREO_BM_BASIC_PRESET
     ndisparities = 16 * 5
-    sad_winsize = 21
+    sad_winsize = 11
     sbm = cv2.StereoBM(preset, ndisparities, sad_winsize)
     
     disparity = sbm.compute(img_left, img_right, disptype=cv2.CV_16S)
     
+    minval, maxval = cv2.minMaxLoc(disparity)[:2]
     
+    res = cv2.reprojectImageTo3D(disparity, svs.Q)
+
+    save_image(disparity, 'disp.png')
