@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cvapplications.svsparametrize2 import parametrize_stereo_vision_system
+from cvapplications.svsparametrize import parametrize_stereo_vision_system
 import params
 import argparse 
 
