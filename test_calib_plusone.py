@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-from cvfunctions import calibration, output
+from cvfunctions import calibration, chessboard
 from params import ImageSets
 
 imageset = ImageSets.raufoss_set2_left
@@ -12,7 +12,7 @@ Using the following flags
 (see: http://answers.opencv.org/question/15438/findchessboardcorners-is-not-working-for/)
 '''
 f = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS
-corners, images = calibration.open_images_and_find_corners(images_mask, pattern_size, f)
+corners, images = chessboard.open_images_and_find_corners(images_mask, pattern_size, f)
 
 print len(images)
 

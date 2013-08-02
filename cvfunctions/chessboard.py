@@ -2,8 +2,9 @@
 
 import cv2
 from cvfunctions import output
+from cvfunctions.images import open_images_from_mask
 
-def find_chessboard_corners(images, pattern_size, findcbc_flags=None):
+def find_chessboard_corners(images, pattern_size, searchwin_size=5, findcbc_flags=None):
     ''' 
     Finds chessboard corners on each image from the specified list. 
     Returns a list of tuples, returned from  
@@ -20,7 +21,7 @@ def find_chessboard_corners(images, pattern_size, findcbc_flags=None):
         found, corners = res
         if found:
             term = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1)
-            cv2.cornerSubPix(img, corners, (11, 11), (-1, -1), term)      
+            cv2.cornerSubPix(img, corners, (searchwin_size, searchwin_size), (-1, -1), term)      
             
     return chessboard_corners_results
 
@@ -70,6 +71,18 @@ def filter_chessboard_corners_results_stereo(chessboard_corners_results_left, ch
             corners_left_filtered.append(chessboard_corners_results_left[i])
             corners_right_filtered.append(chessboard_corners_results_right[i])
     return (corners_left_filtered, corners_right_filtered, images_left_filtered, images_right_filtered)
+
+def open_images_and_find_corners(images_mask, pattern_size, findcbc_flags=None):
+    ''' 
+    Open the images and find chessboard corners on them. 
+    Then filter out the images (and corresponding corners)
+    that failed during the cv2.findChessboardCorners call 
+    '''
+    opened_images = open_images_from_mask(images_mask)
+    chessboard_corners_results = find_chessboard_corners(opened_images, pattern_size, findcbc_flags=findcbc_flags)
+          
+    corners_filtered, images_filtered = filter_chessboard_corners_results(chessboard_corners_results, opened_images)
+    return corners_filtered, images_filtered
 
 
 def chessboard_corners_maxtrix_to_lists(matrix):

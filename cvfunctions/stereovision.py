@@ -100,19 +100,6 @@ def compute_rectification_transforms(intrinsics_left, intrinsics_right, image_si
     res = cv2.stereoRectify(camera_matrix_left, dist_coefs_left, camera_matrix_right, dist_coefs_right, image_size, rotation_matrix, translation_vector)
     return res
     
-def compute_rectification_transforms_uncalibrated(camera_matrix_left, camera_matrix_right, points_left, points_right, image_size, fund_matrix=None):
-    ''' 
-    A wrapper around cv2.stereoRectifyUncalibrated function    
-    (GIVES BAD RESULTS)
-    '''    
-    if fund_matrix == None:
-        fund_matrix = cv2.findFundamentalMat(points_left, points_right)[0]
-    
-    retval, h_left, h_right = cv2.stereoRectifyUncalibrated(points_left, points_right, fund_matrix, image_size)
-    r_left = inv(camera_matrix_left) * h_left * camera_matrix_left 
-    r_right = inv(camera_matrix_right) * h_right * camera_matrix_right
-    return (r_left, r_right)
-    
     
     
     

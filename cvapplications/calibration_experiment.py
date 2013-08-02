@@ -1,8 +1,7 @@
 from cvfunctions import calibration
 from cvfunctions import chessboard
-from cvfunctions import images
 from cvfunctions import output
-import random
+from generalfunctions import sampling
 import numpy as np
 import os
 import csv
@@ -10,7 +9,7 @@ import time
 import sys
 import cv2
 
-def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, num_of_tests, experiments_dir, experiment_name, special_flags=True):
+def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, nsamples, experiments_dir, experiment_name, special_flags=False):
     ''' 
     Conducts an experiment on a given set of images with invoking the calibration
     algorithm on a number of samples of randomly chosen images from the set. 
@@ -21,7 +20,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     square_size -- size of a square edge on the chessboard
     data_file -- path to the pickle file for saving/restoring image processing data
     sample_size -- size of the samples taken for calibration
-    num_of_tests -- number of samples to be tested
+    nsamples -- number of samples to be tested
     experiments_dir -- directory in which the results of the experiment are to be saved
     experiment_name -- short string defining the name of current experiment
     special_flags -- TODo
@@ -39,7 +38,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
         f = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS
     else:
         f = None
-    chessboard_corners_results, opened_images = calibration.open_images_and_find_corners(images_mask, pattern_size, f)   
+    chessboard_corners_results, opened_images = chessboard.open_images_and_find_corners(images_mask, pattern_size, f)   
         
     ''' Calibrate camera '''
     print 'Calibrating the camera (all images)'
@@ -50,16 +49,16 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
   
     ''' Samples testing ''' 
     num_of_images_total = len(opened_images)
-    tests = []
-    for i in range(num_of_tests):
-        sample = [random.randint(0, num_of_images_total - 1) for j in range(sample_size)]
-        tests.append(sample)
-
+    samples = sampling.generate_list_of_samples(num_of_images_total, sample_size, nsamples)
+    
+    with open(os.path.join(results_dir, 'samples_combinations.csv'), 'wb') as f:
+        write_samples_to_file(samples, f)        
+        
     res_table = []
     
     print 'Calibrating the camera using random samples of images:'
     sample_index = 1
-    for t in tests:
+    for t in samples:
         sample_images = [opened_images[el] for el in t]
         sample_corners = [chessboard_corners_results[el] for el in t]
         
@@ -111,4 +110,8 @@ def write_calibration_results_to_file(res_table, f):
         
     for row in res_table:    
         w.writerow(row)
-
+        
+def write_samples_to_file(samples, f):
+    w = csv.writer(f)    
+    for s in samples:
+        w.writerow(s)        
