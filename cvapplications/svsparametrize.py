@@ -67,13 +67,6 @@ def compute_intrinsics(images_left, images_right, corners_left, corners_right, p
     intrinsics_right = calibration.calibrate_camera(images_right, pattern_size, square_size, corners_right)[1:3]
     return (intrinsics_left, intrinsics_right)
     
-def rectify_uncalibrated(intrinsics_left, intrinsics_right, corners_left, corners_right, image_size):
-    cm_left, dc_left = intrinsics_left
-    cm_right, dc_right = intrinsics_right
-    points_left = cv2.undistortPoints(corners_left[0][1], cm_left, dc_left)
-    points_right = cv2.undistortPoints(corners_right[0][1], cm_right, dc_right)
-    R1_uc, R2_uc = sv.compute_rectification_transforms_uncalibrated(cm_left, cm_right, points_left, points_right, image_size)    
-    
 def save_rectified_images(new_images):
     timelabel = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(time.time()))        
     savedir = p.rectified_images_dir

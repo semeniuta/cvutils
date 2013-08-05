@@ -2,7 +2,6 @@
 from cvfunctions import calibration
 from cvfunctions import images
 import cv2
-from numpy.linalg.linalg import inv
 
 def calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, chessboard_corners_results_left, chessboard_corners_results_right):    
     ''' 
