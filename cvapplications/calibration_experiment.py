@@ -38,7 +38,6 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
         f = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS
     else:
         f = None
-    #chessboard_corners_results, opened_images = chessboard.open_images_and_find_corners(images_mask, pattern_size, f)   
     chessboard_corners_results, opened_images, filenames = chessboard.open_images_and_find_corners_universal(images_mask, pattern_size, findcbc_flags=f)   
     
     with open(os.path.join(results_dir, 'images.csv'), 'wb') as f:

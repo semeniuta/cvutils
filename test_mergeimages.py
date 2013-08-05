@@ -5,11 +5,11 @@ import os
 from cvfunctions import output, images, chessboard
 import numpy as np
 
-left_dir = r'D:\Dropbox\SINTEF\rectified\2013-08-05_095017_LEFT'
-right_dir = r'D:\Dropbox\SINTEF\rectified\2013-08-05_095017_RIGHT'
+left_dir = r'D:\Dropbox\SINTEF\rectified\2013-08-05_130045_LEFT'
+right_dir = r'D:\Dropbox\SINTEF\rectified\2013-08-05_130045_RIGHT'
 pattern_size = (10, 8)
 
-n = 0   
+n = 1   
 im1 = images.open_image(os.path.join(left_dir, '%d.jpg' % n))
 im2 = images.open_image(os.path.join(right_dir, '%d.jpg' % n))
 

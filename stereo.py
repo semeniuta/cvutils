@@ -3,6 +3,7 @@
 from cvapplications.svsparametrize import parametrize_stereo_vision_system
 import params
 import argparse 
+from cvclasses.stereovisionsystem import StereoVisionSystem
 
 def initialize_parameters(args=None):
     p = params.SVSParametrization    
@@ -43,3 +44,9 @@ if __name__ == '__main__':
     
     parameters = initialize_parameters(args)
     svs = start(parameters)
+    
+    svs.pickle("svs.pickle")
+    svs1 = StereoVisionSystem()
+    svs1.unpickle("svs.pickle")
+    
+    svs.save_to_excel_file("res.xlsx")

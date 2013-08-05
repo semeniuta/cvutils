@@ -18,14 +18,14 @@ class Camera:
     def set_intrinsics(self, intrinsics):
         self.camera_matrix, self.dist_coefs = intrinsics
         
+    def pickle(self, filename):
+        with open(filename, 'wb') as f:
+            pickle.dump(self.intrinsics, f) 
+    
     def unpickle(self, filename):
         with open(filename, 'rb') as f:
             data = pickle.load(f)
-        self.set_intrinsics(data)
-    
-    def pickle(self, filename):
-        with open(filename, 'wb') as f:
-            pickle.dump(self.intrinsics, f)    
+        self.set_intrinsics(data)   
     
     def save_to_excel_file(self, filename):
         wb = Workbook(filename)
