@@ -15,10 +15,17 @@ from cvclasses.stereovisionsystem import StereoVisionSystem
 def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size, get_intrinsics_method, saverect):
     
     f = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS    
-
-    print 'Opening images and finding chessboard corners'
-    res = chessboard.open_images_and_find_corners_universal(imagemasks[0], pattern_size, imagemasks[1], findcbc_flags=f)
-    corners_left, corners_right, images_left, images_right, filenames_left, filenames_right = res
+    
+    print 'Opening images'    
+    images_left, images_right = open_images(imagemasks)
+    
+    images_left = images_left
+    images_right = images_right
+    
+    print 'Finding chessboard corners'
+    corners_left = chessboard.find_chessboard_corners(images_left, pattern_size, f)    
+    corners_right = chessboard.find_chessboard_corners(images_right, pattern_size, f)
+    corners_left, corners_right, images_left, images_right = chessboard.filter_chessboard_corners_results_stereo(corners_left, corners_right, images_left, images_right)
     
     if get_intrinsics_method == 'compute':
         print "Computing cameras' intrinsic parameters"

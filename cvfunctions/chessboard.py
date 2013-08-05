@@ -5,7 +5,7 @@ from cvfunctions import output
 from cvfunctions.images import open_images_from_mask
 from glob import glob
 
-def find_chessboard_corners(images, pattern_size, searchwin_size=11, findcbc_flags=None):
+def find_chessboard_corners(images, pattern_size, searchwin_size=5, findcbc_flags=None):
     ''' 
     Finds chessboard corners on each image from the specified list. 
     Returns a list of tuples, returned from  

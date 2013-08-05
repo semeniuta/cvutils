@@ -21,14 +21,14 @@ class CalibrationExperiment:
     results_dir = Directories.experiment_results
 
 class DataDirsTI:
-    left = r'D:\Dropbox\SINTEF\experiments\NEWLEFT_10x3000'
-    right = r'D:\Dropbox\SINTEF\experiments\NEWRIGHT_10x3000'
+    left = r'D:\Dropbox\SINTEF\experiments\NEWLEFT2_10x3000'
+    right = r'D:\Dropbox\SINTEF\experiments\NEWRIGHT2_10x3000'
 
 class SVSParametrization:
     imageset_left = ImageSets.raufoss_set2_left
     imageset_right = ImageSets.raufoss_set2_right
-    datadir_left = r'D:\Dropbox\SINTEF\experiments\NEWLEFT_10x2000'
-    datadir_right = r'D:\Dropbox\SINTEF\experiments\NEWRIGHT_10x2000'
+    datadir_left = r'D:\Dropbox\SINTEF\experiments\NEWLEFT2_10x3000'
+    datadir_right = r'D:\Dropbox\SINTEF\experiments\NEWRIGHT2_10x3000'
     rectified_images_dir = Directories.rectified_images
 
 #class SVSParametrization:
