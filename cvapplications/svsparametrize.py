@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import cPickle as pickle
-from params import SVSParametrization as p
 from cvfunctions import stereovision as sv
+from cvapplications.confmanager import ConfigManager
 from cvfunctions import images
 from cvfunctions import chessboard
 from cvfunctions import calibration
@@ -11,6 +11,9 @@ import os
 import time
 import cv2
 from cvclasses.stereovisionsystem import StereoVisionSystem
+
+cm = ConfigManager()
+params = cm.get_svs_parameters() 
 
 def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size, get_intrinsics_method, saverect):
     
@@ -56,10 +59,9 @@ def open_images(imagemasks):
     images_right = images.open_images_from_mask(imagemasks[1])
     return (images_left, images_right)
     
-def unpickle_intrinsics():
-
-    intrinsics_left = unpickle_data(os.path.join(p.datadir_left, 'intrinsics.pickle'))
-    intrinsics_right = unpickle_data(os.path.join(p.datadir_right, 'intrinsics.pickle'))         
+def unpickle_intrinsics():   
+    intrinsics_left = unpickle_data(os.path.join(params['datadir_left'], 'intrinsics.pickle'))
+    intrinsics_right = unpickle_data(os.path.join(params['datadir_right'], 'intrinsics.pickle'))         
     return (intrinsics_left, intrinsics_right)
 
 def compute_intrinsics(images_left, images_right, corners_left, corners_right, pattern_size, square_size):
@@ -69,10 +71,9 @@ def compute_intrinsics(images_left, images_right, corners_left, corners_right, p
     
 def save_rectified_images(new_images):
     timelabel = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(time.time()))        
-    savedir = p.rectified_images_dir
-    savedir_left = os.path.join(savedir, timelabel + '_LEFT')
-    savedir_right = os.path.join(savedir, timelabel + '_RIGHT')
+    dirname = '%s_%s' % (params['name'], timelabel)
+    savedir = os.path.join(cm.get_directory('stereo'), dirname, 'rectified_images')
             
     rectimg_left, rectimg_right = new_images
-    images.save_images_to_dir(rectimg_left, savedir_left)
-    images.save_images_to_dir(rectimg_right, savedir_right)
+    images.save_images_to_dir(rectimg_left, savedir, '%d_0.jpg')
+    images.save_images_to_dir(rectimg_right, savedir, '%d_1.jpg')

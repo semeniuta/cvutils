@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from cvapplications import trueintrinsic as ti
+from cvapplications.confmanager import ConfigManager
 from cvfunctions import output
 import pandas
 import os
-from params import DataDirsTI
 from cvclasses.camera import Camera
 
 def read_data(data_dir):
@@ -49,7 +49,10 @@ if __name__ == '__main__':
     create_histograms = True
     nbins = 100
     
-    compute_ti(DataDirsTI.left, DataDirsTI.right, nbins, create_histograms)
+    cm = ConfigManager()
+    left_dir, right_dir = cm.get_ti_dirs()    
+    
+    compute_ti(left_dir, right_dir, nbins, create_histograms)
     
     #data = read_data(DataDirsTI.left)
     #ti.print_statistics(data)

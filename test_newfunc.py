@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from params import ImageSets
 from cvfunctions import chessboard
 import cv2
+from cvapplications.confmanager import ConfigManager
 
-imageset = ImageSets.raufoss_set2_left
+cm = ConfigManager()
 
-mask = imageset[0]
-pattern_size = imageset[1]
+imageset = cm.get_chessboard_imageset('raufoss_set2_left')
 
 f = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS 
-res1 = chessboard.open_images_and_find_corners(mask, pattern_size, findcbc_flags=f)
+res1 = chessboard.open_images_and_find_corners(imageset.imagemask, imageset.pattern_size, findcbc_flags=f)
 
-res2 = chessboard.open_images_and_find_corners_universal(mask, pattern_size, findcbc_flags=f)
+res2 = chessboard.open_images_and_find_corners_universal(imageset.imagemask, imageset.pattern_size, findcbc_flags=f)
 
 size1 = len(res1[0])
 size2 = len(res2[0])

@@ -1,33 +1,29 @@
 # -*- coding: utf-8 -*-
 
 from cvapplications.svsparametrize import parametrize_stereo_vision_system
-import params
+from cvapplications.confmanager import ConfigManager
 import argparse 
 from cvclasses.stereovisionsystem import StereoVisionSystem
 
 def initialize_parameters(args=None):
-    p = params.SVSParametrization    
     
-    if args.imageset_left == None:
-        imageset_left = p.imageset_left
-    else:
-        imageset_left = get_imageset(args.imageset_left)
+    cm = ConfigManager()
+    params = cm.get_svs_parameters()
+
+    imageset_left_name = params['imageset_left'] if  args.imageset_left == None else args.imageset_left     
+    imageset_right_name = params['imageset_right'] if  args.imageset_right == None else args.imageset_right
     
-    if args.imageset_right == None:
-        imageset_right = p.imageset_right
-    else:
-        imageset_right = get_imageset(args.imageset_rigth)
-    
-    imagemasks = (imageset_left[0], imageset_right[0])
-    pattern_size, square_size = imageset_left[1:3]
+    imageset_left = cm.get_chessboard_imageset(imageset_left_name)    
+    imageset_right = cm.get_chessboard_imageset(imageset_right_name)    
+        
+    imagemasks = (imageset_left.imagemask, imageset_right.imagemask)
+    pattern_size = imageset_left.pattern_size
+    square_size = imageset_left.square_size
 
     get_intrinsics_method = args.intrinsics     
     saverect = args.saverect
     
     return (imagemasks, pattern_size, square_size, get_intrinsics_method, saverect)
-
-def get_imageset(name):
-    return getattr(params.ImageSets, name)
 
 def start(args):
     svs = parametrize_stereo_vision_system(*args)

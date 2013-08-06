@@ -3,13 +3,15 @@
 import cv2
 from cvfunctions.images import open_image, save_image
 from cvapplications.svsparametrize import parametrize_stereo_vision_system
-from params import SVSParametrization as p
+from cvapplications.confmanager import ConfigManager
 
 def get_svs_object():
-    lr_imagesets = (p.imageset_left, p.imageset_right)
-    imagemasks = (lr_imagesets[0][0], lr_imagesets[1][0])
-    pattern_size = lr_imagesets[0][1]
-    square_size = lr_imagesets[0][2]
+    cm = ConfigManager()
+    params = cm.get_svs_parameters()
+    lr_imagesets = (cm.get_chessboard_imageset(params['imageset_left']), cm.get_chessboard_imageset(params['imageset_right']))
+    imagemasks = (lr_imagesets[0].imagemask, lr_imagesets[1].imagemask)
+    pattern_size = lr_imagesets[0].pattern_size
+    square_size = lr_imagesets[0].square_size
     svs = parametrize_stereo_vision_system(imagemasks, pattern_size, square_size, "compute", False)
     return svs
 

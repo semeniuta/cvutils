@@ -2,10 +2,12 @@
 
 import cv2
 from cvfunctions import calibration, chessboard
-from params import ImageSets
+from cvapplications.confmanager import ConfigManager
 
-imageset = ImageSets.raufoss_set2_left
-images_mask, pattern_size, square_size, experiment_name = imageset
+cm = ConfigManager()
+
+imageset = cm.get_chessboard_imageset('raufoss_set2_left')
+images_mask, pattern_size, square_size, experiment_name = imageset.get_tuple()
 
 '''
 Using the following flags

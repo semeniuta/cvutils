@@ -29,7 +29,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     start = time.time()    
     
     experiment_start_label = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(start))
-    current_dir = '%s_%s' % (experiment_start_label, experiment_name)
+    current_dir = '%s_%dx%d_%s' % (experiment_name, sample_size, nsamples, experiment_start_label)
     results_dir = os.path.join(experiments_dir, current_dir)
     os.makedirs(results_dir)
     

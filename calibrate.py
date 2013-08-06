@@ -1,21 +1,21 @@
+# -*- coding: utf-8 -*-
+
 from cvapplications import calibration_experiment as calexp
-import params
 import argparse
+from cvapplications.confmanager import ConfigManager
 
 def initialize_parameters(args=None):
-    p = params.CalibrationExperiment    
+    cm = ConfigManager()    
     
-    sample_size = p.sample_size if args.samplesize == None else args.samplesize
-    num_of_samples = p.num_of_samples if args.nsamples == None else args.nsamples
+    params = cm.get_calibration_parameters()
     
-    if args.imageset == None:
-        imageset = p.imageset
-    else:
-        imageset_name = args.imageset
-        imageset = getattr(params.ImageSets, imageset_name)
-    
-    images_mask, pattern_size, square_size, experiment_name = imageset
-    results_dir = p.results_dir
+    sample_size = params['sample_size'] if args.samplesize == None else args.samplesize
+    num_of_samples = params['num_of_samples'] if args.nsamples == None else args.nsamples       
+    imageset_name = params['imageset'] if  args.imageset == None else args.imageset     
+    imageset = cm.get_chessboard_imageset(imageset_name)    
+        
+    images_mask, pattern_size, square_size, experiment_name = imageset.get_tuple()
+    results_dir = cm.get_directory('calibration')
     
     return (images_mask, pattern_size, square_size, sample_size, num_of_samples, results_dir, experiment_name)
 
