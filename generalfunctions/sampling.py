@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import random
+import csv
 
 def generate_list_of_samples(population_size, sample_size, nsamples):
     samples = []
@@ -18,3 +19,18 @@ def generate_sample(population_size, sample_size):
             sample.append(rnd)    
     
     return sorted(sample)
+
+def write_samples_to_file(samples, filename):
+    with open(filename, 'wb') as f:    
+        w = csv.writer(f)    
+        for s in samples:
+            w.writerow(s)
+
+def read_samples_from_file(filename):
+    res = []    
+    with open(filename, 'rb') as f:
+        r = csv.reader(f)
+        for row in r:
+            row_int = map(lambda x: int(x), row)
+            res.append(row_int)
+    return res

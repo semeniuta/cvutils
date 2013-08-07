@@ -56,8 +56,8 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     num_of_images_total = len(opened_images)
     samples = sampling.generate_list_of_samples(num_of_images_total, sample_size, nsamples)
     
-    with open(os.path.join(results_dir, 'samples_combinations.csv'), 'wb') as f:
-        write_samples_to_file(samples, f)        
+    samples_filename = os.path.join(results_dir, 'samples_combinations.csv')
+    sampling.write_samples_to_file(samples, samples_filename)        
         
     res_table = []
     
@@ -112,11 +112,6 @@ def write_calibration_results_to_file(res_table, f):
         
     for row in res_table:    
         w.writerow(row)
-        
-def write_samples_to_file(samples, f):
-    w = csv.writer(f)    
-    for s in samples:
-        w.writerow(s)    
         
 def write_images_list_to_file(images_list, f):
     w = csv.writer(f)    

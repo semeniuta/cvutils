@@ -2,13 +2,10 @@
 from cvapplications import trueintrinsic as ti
 from cvapplications.confmanager import ConfigManager
 from cvfunctions import output
-import pandas
 import os
 from cvclasses.camera import Camera
 import shutil
-
-def read_data(data_dir):
-    return pandas.read_csv(os.path.join(data_dir, 'samples_calibration.csv'))  
+from cvapplications import calibdata
 
 def create_hist(intrinsics, original_dataset, nbibs, imageset_name, directory):    
     ''' Create and save histograms '''    
@@ -38,7 +35,7 @@ def compute_ti(data_dir_left, data_dir_right, nbins, create_histograms):
     data_dirs = {'left': data_dir_left, 'right': data_dir_right}
     cameras = {'left': Camera(), 'right': Camera()}    
     
-    dataframes = {cam: read_data(ddir) for cam, ddir in data_dirs.iteritems()}
+    dataframes = {cam: calibdata.read_data(ddir) for cam, ddir in data_dirs.iteritems()}
     ti_results = {cam: ti.find_true_intrinsics(dframe, nbins) for cam, dframe in dataframes.iteritems()}
     
     for cam_name, intrinsics in ti_results.iteritems():
