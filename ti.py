@@ -5,22 +5,33 @@ from cvfunctions import output
 import pandas
 import os
 from cvclasses.camera import Camera
+import shutil
 
 def read_data(data_dir):
     return pandas.read_csv(os.path.join(data_dir, 'samples_calibration.csv'))  
 
-def create_hist(intrinsics, original_dataset, nbibs, imageset_name=''):    
+def create_hist(intrinsics, original_dataset, nbibs, imageset_name, directory):    
     ''' Create and save histograms '''    
     varnames = ['fx', 'fy', 'cx', 'cy', 'k1', 'k2', 'p1', 'p2', 'k3']    
     
+    hist_dir = os.path.join(directory, 'ti_histograms')
+    if not os.path.exists(hist_dir):
+        os.makedirs(hist_dir)
+    else:
+        shutil.rmtree(hist_dir)
+        os.makedirs(hist_dir)    
+        
     intr = ti.expand_ti_tuple(intrinsics)                 
     for i in range(len(varnames)):
         var = varnames[i]
         series = original_dataset[var]           
         
-        output.create_histogram(series, nbins, '%s %s' % (imageset_name, var))
+        title = '%s %s' % (imageset_name, var)  
+        filename = os.path.join(hist_dir, '%s_%s.jpg' % (imageset_name, var))
+        output.create_histogram(series, nbins, title)
         x = intr[i]               
         output.draw_vertical_line(x)
+        output.save_current_figure(filename)
 
 def compute_ti(data_dir_left, data_dir_right, nbins, create_histograms):
     ''' Compute "true intrinsics" for both cameras '''    
@@ -41,8 +52,8 @@ def compute_ti(data_dir_left, data_dir_right, nbins, create_histograms):
         camera.pickle(pickle_file)
         
     if create_histograms:
-        create_hist(ti_results['left'], dataframes['left'], nbins, 'left')
-        create_hist(ti_results['right'], dataframes['right'], nbins, 'right')
+        create_hist(ti_results['left'], dataframes['left'], nbins, 'left', data_dirs['left'])
+        create_hist(ti_results['right'], dataframes['right'], nbins, 'right', data_dirs['right'])
 
 if __name__ == '__main__':
 
@@ -53,9 +64,7 @@ if __name__ == '__main__':
     left_dir, right_dir = cm.get_ti_dirs()    
     
     compute_ti(left_dir, right_dir, nbins, create_histograms)
-    
-    #data = read_data(DataDirsTI.left)
-    #ti.print_statistics(data)
+
 
     
     

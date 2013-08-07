@@ -40,9 +40,4 @@ if __name__ == '__main__':
     
     parameters = initialize_parameters(args)
     svs = start(parameters)
-    
-    svs.pickle("svs.pickle")
-    svs1 = StereoVisionSystem()
-    svs1.unpickle("svs.pickle")
-    
-    svs.save_to_excel_file("res.xlsx")
+

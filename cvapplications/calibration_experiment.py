@@ -29,8 +29,10 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     start = time.time()    
     
     experiment_start_label = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(start))
-    current_dir = '%s_%dx%d_%s' % (experiment_name, sample_size, nsamples, experiment_start_label)
+    current_dir = '%dx%d_%s' % (sample_size, nsamples, experiment_name)
     results_dir = os.path.join(experiments_dir, current_dir)
+    if os.path.exists(results_dir):
+        results_dir += ('_%s' % experiment_start_label) 
     os.makedirs(results_dir)
     
     print 'Opening images and finding chessboard corners'

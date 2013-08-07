@@ -41,13 +41,27 @@ def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size, get_
     image_size = images.get_image_size(images_left[0])
     rect_res = sv.compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, svs.R, svs.T)
     svs.set_rectification_transforms(rect_res)    
-
+    
+    res_dir = create_results_dir()    
+    
+    print 'Saving data'    
+    svs.pickle(os.path.join(res_dir, 'svs.pickle'))
+    svs.save_to_excel_file(os.path.join(res_dir, 'svs_parameters.xlsx'))
+    
     if saverect:
         print 'Rectifying and saving images'
         new_images = transform.undistort_and_rectify_images_stereo(images_left, images_right, intrinsics_left, intrinsics_right, svs.rotation_matrices, svs.projection_matrices)
-        save_rectified_images(new_images)
+        save_rectified_images(new_images, res_dir)
     
     return svs
+
+def create_results_dir():
+    timelabel = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(time.time()))        
+    dirname = '%s_%s' % (params['name'], timelabel)
+    res_dir = os.path.join(cm.get_directory('stereo'), dirname)
+    os.makedirs(res_dir)
+    return res_dir
+
 
 def unpickle_data(filename):
     with open(filename, 'rb') as f:
@@ -69,11 +83,8 @@ def compute_intrinsics(images_left, images_right, corners_left, corners_right, p
     intrinsics_right = calibration.calibrate_camera(images_right, pattern_size, square_size, corners_right)[1:3]
     return (intrinsics_left, intrinsics_right)
     
-def save_rectified_images(new_images):
-    timelabel = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(time.time()))        
-    dirname = '%s_%s' % (params['name'], timelabel)
-    savedir = os.path.join(cm.get_directory('stereo'), dirname, 'rectified_images')
-            
+def save_rectified_images(new_images, res_dir):
+    savedir = os.path.join(res_dir, 'rectified_images')            
     rectimg_left, rectimg_right = new_images
     images.save_images_to_dir(rectimg_left, savedir, '%d_0.jpg')
     images.save_images_to_dir(rectimg_right, savedir, '%d_1.jpg')
