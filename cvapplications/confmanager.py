@@ -3,6 +3,7 @@
 from ConfigParser import ConfigParser
 import os
 from cvclasses.imageset import CalibrationImageSet
+from glob import glob
 
 SYSTEM_CONFIG_FILE = r'conf.ini'
 IMAGESETS_CONFIG_FILE = r'imagesets.ini'
@@ -27,12 +28,20 @@ class ConfigManager:
         dir_dict = {key: os.path.join(self.get_root_directory(), dirname) for key, dirname in tuples}
         return dir_dict
         
-    def get_chessboard_imageset(self, imageset_name):
+    def get_imageset_images_list(self, imageset_name):
+        mask = self.get_imageset_full_mask(imageset_name)
+        return glob(mask)
+    
+    def get_imageset_full_mask(self, imageset_name):
         imagemask = self.imgconfig.get(imageset_name, 'mask')
         if '/' not in imagemask and '\\' not in imagemask:
             root_dir = self.get_root_directory()
             img_dir = self.systemconfig.get('directories', 'imagesets')
             imagemask = os.path.join(root_dir, img_dir, imageset_name, imagemask)
+        return imagemask
+    
+    def get_chessboard_imageset(self, imageset_name):
+        imagemask = self.get_imageset_full_mask(imageset_name)
         
         width = self.imgconfig.getint(imageset_name, 'width')
         height = self.imgconfig.getint(imageset_name, 'height')

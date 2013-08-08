@@ -33,3 +33,12 @@ def draw_horizontal_line(y, color='r', linewidth=1):
     
 def plot_points(x, y):
     plot(x, y, 'ro')
+
+def plot_circles(circles, color='b'):
+    circle_objects = [plt.Circle(center, radius, edgecolor=color, fill=False) for center, radius in circles]    
+    fig = plt.gcf()
+    for c in circle_objects:
+        fig.gca().add_artist(c)
+    
+                
+    

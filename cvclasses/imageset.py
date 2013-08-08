@@ -12,3 +12,4 @@ class CalibrationImageSet:
         
     def __str__(self):
         return 'CalibrationImageSet %s (%s)' % (self.name, self.imagemask)
+         
