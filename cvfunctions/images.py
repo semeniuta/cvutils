@@ -66,4 +66,7 @@ def save_images_to_dir(images, directory, mask='%d.jpg'):
     
     for i in range(len(images)):
         save_image(images[i], os.path.join(directory, mask % i))
+        
+def merge_images(img1, img2):
+    return np.concatenate((img1, img2), axis=1)
     

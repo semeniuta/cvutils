@@ -31,10 +31,10 @@ def draw_vertical_line(x, color='r', linewidth=1):
 def draw_horizontal_line(y, color='r', linewidth=1):
     plt.axhline(y, color=color, linewidth=linewidth)
     
-def plot_points(x, y):
-    plot(x, y, 'ro')
+def plot_points(x, y, color='r'):
+    plot(x, y, color + 'o')
 
-def plot_circles(circles, color='b'):
+def plot_circles(circles, color='b'):    
     circle_objects = [plt.Circle(center, radius, edgecolor=color, fill=False) for center, radius in circles]    
     fig = plt.gcf()
     for c in circle_objects:

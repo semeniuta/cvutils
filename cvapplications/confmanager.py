@@ -67,6 +67,20 @@ class ConfigManager:
         res['datadir_right'] = os.path.join(calib_dir, self.systemconfig.get('svs', 'datadir_right'))
         res['name'] = self.systemconfig.get('svs', 'name')
         return res
+        
+    def get_pyramid_parameters(self):
+        stereo_dir_name = self.systemconfig.get('pyramid', 'stereo_dir')
+        intrinsics_left_dir_name = self.systemconfig.get('pyramid', 'intrinsics_left_dir')
+        intrinsics_right_dir_name = self.systemconfig.get('pyramid', 'intrinsics_right_dir')
+        
+        svs_results_dir = self.get_directory('stereo')
+        calib_dir = self.get_directory('calibration')
+        
+        res = {}
+        res['stereo_dir'] = os.path.join(svs_results_dir, stereo_dir_name)
+        res['intrinsics_left_dir'] = os.path.join(calib_dir, intrinsics_left_dir_name)
+        res['intrinsics_right_dir'] = os.path.join(calib_dir, intrinsics_right_dir_name)
+        return res
     
     def get_ti_dirs(self):
         calib_dir = self.get_directory('calibration')
