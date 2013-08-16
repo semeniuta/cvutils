@@ -125,7 +125,6 @@ def get_lines(blobs):
             y_avg = average(y_list)
             slope, intercept = geometry.get_line_equation(x_list, y_list)
             res.append([x[i], x[j], y[i], y[j], x_avg, y_avg, dist, slope, intercept])
-            #res.append({'slope': slope, 'intercept': intercept, 'x': x_list, 'y': y_list, 'dist': dist})
     
     df = pd.DataFrame(res, columns=['x0', 'x1', 'y0', 'y1', 'x', 'y', 'dist', 'slope', 'intercept'])
     
