@@ -52,13 +52,14 @@ def get_lineeq(df):
     
 def get_xy_avg(df):
     return np.array(df.loc[:, 'x':'y'])
+    
 
 def cluster_segments_by_lines_equations(res_f, display_images=True):
     lineeq = get_lineeq(res_f)
     xy = get_xy(res_f)
     xy_avg = get_xy_avg(res_f)
     
-    #data = np.concatenate((lineeq, xy_avg))    
+    #data = np.array(res_f.loc[:, 'x0':'dist'])    
     data = lineeq    
     
     nclusters = 12
@@ -101,4 +102,3 @@ if __name__ == '__main__':
     cluster_segments_by_lines_equations(res_f, True)    
     
     #cluster_segments_by_xy_avg(res_f)
-    

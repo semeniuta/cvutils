@@ -32,9 +32,7 @@ def detect_dots(image, ndots=36, blur_window=0, iterate=True, max_threshold=25, 
         blobs = det.detect(im_t)
         ndots_found = len(blobs)
         i += 1
-    
-    print max_threshold, i
-    print ndots_found
+        
     return blobs, im_t
     
 def display_dots(image, blobs):
@@ -108,6 +106,9 @@ def get_xy(blobs):
         y.append(b.pt[1])
     return x, y
     
+def xy_lists_to_matrix(x, y):
+    return np.transpose(np.vstack((x, y))) 
+    
 def get_lines(blobs):
     n = len(blobs)
     
@@ -121,11 +122,31 @@ def get_lines(blobs):
             dist = math.sqrt(a+b)
             x_list = [x[i], x[j]]
             y_list = [y[i], y[j]]
-            x_avg = average(x_list)
-            y_avg = average(y_list)
             slope, intercept = geometry.get_line_equation(x_list, y_list)
-            res.append([x[i], x[j], y[i], y[j], x_avg, y_avg, dist, slope, intercept])
+            res.append([i, j, dist, slope, intercept])
     
-    df = pd.DataFrame(res, columns=['x0', 'x1', 'y0', 'y1', 'x', 'y', 'dist', 'slope', 'intercept'])
+    df = pd.DataFrame(res, columns=['a', 'b', 'dist', 'slope', 'intercept'])
     
     return df
+    
+def build_chains(df):
+    get_ab_tuple = lambda segment: (int(segment['a']), int(segment['b']))    
+    
+    chains = []
+    index = 0    
+    for i in df.index:
+        starting_segment = df.ix[i]
+        chains.append([starting_segment])
+        for j in df.index:
+            segment = df.ix[j]
+            last_segment = chains[index][-1]
+            if last_segment['b'] == segment['a']:
+                slope_ratio = last_segment['slope'] / segment['slope']
+                intercept_ratio = last_segment['intercept'] / segment['intercept']
+                if (0.5 < slope_ratio < 1.5) and (0.5 < intercept_ratio < 1.5):
+                    chains[index].append(segment)
+        index += 1
+                
+    return chains
+        
+        
