@@ -5,8 +5,8 @@ import os
 from cvclasses.imageset import CalibrationImageSet
 from glob import glob
 
-SYSTEM_CONFIG_FILE = r'conf.ini'
-IMAGESETS_CONFIG_FILE = r'imagesets.ini'
+SYSTEM_CONFIG_FILE = r'conf_system.ini'
+IMAGESETS_CONFIG_FILE = r'conf_imagesets.ini'
 
 class ConfigManager:
     def __init__(self):        

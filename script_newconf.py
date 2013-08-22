@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+'''
+Script that tests and shows the functionality 
+of the new configureation manager
+'''
+
 from cvapplications.confmanager import ConfigManager
 
 cm = ConfigManager()

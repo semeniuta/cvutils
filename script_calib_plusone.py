@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+'''
+Script that tests how different the camera calibration results will be
+if one image is added to the imageset
+'''
+
 import cv2
 from cvfunctions import calibration, chessboard
 from cvapplications.confmanager import ConfigManager

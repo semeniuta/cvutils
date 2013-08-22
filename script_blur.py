@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
+'''
+Script for testing how different blurring options affect the effectiveness
+of finding dots on the pyramid images
+'''
+
 import cv2
-from cvfunctions import images, output, pyramid
+from cvfunctions import images, pyramid
 from cvapplications.confmanager import ConfigManager
 import matplotlib.pyplot as plt
 
@@ -34,7 +39,5 @@ if __name__ == '__main__':
     im2 = images_list_phone[0]
 
     test_blur(im2)
-
-    #test_hist(im1, im2)
 
 

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
+''' 
+Script that finds dots on the set of pyramid images 
+'''
+
 from cvapplications.confmanager import ConfigManager
-from cvfunctions import images, pyramid, transform, output
-from cvclasses.stereovisionsystem import StereoVisionSystem
-from cvclasses.camera import Camera
-import os
-import random
+from cvfunctions import images, pyramid
 from matplotlib import pyplot as plt
 
 cm = ConfigManager()

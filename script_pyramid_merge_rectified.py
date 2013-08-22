@@ -1,5 +1,17 @@
 # -*- coding: utf-8 -*-
 
+''' 
+Script that illustrates how the images are rectified and that the pyramid's
+dots are not row-aligned on the rectified images 
+
+Open photos of the pyramid taken by two cameras
+Perform stereo calibration
+Rectify the images
+Take specific pair of rectified images and merge them
+Find the dots on the merged image
+Draw the lines throught each dot's center  
+'''
+
 from cvapplications.confmanager import ConfigManager
 from cvfunctions import images, pyramid, transform, output
 from cvclasses.stereovisionsystem import StereoVisionSystem

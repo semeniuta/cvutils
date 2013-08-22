@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+'''
+Script that tries to cluster the pyramid dots into logical groups
+'''
+
 from cvapplications.confmanager import ConfigManager
 from cvfunctions import images, output
 from cvfunctions import pyramid

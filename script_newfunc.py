@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+'''
+Script for testing the complex function 
+chessboard.open_images_and_find_corners_universal
+'''
+
 from cvfunctions import chessboard
 import cv2
 from cvapplications.confmanager import ConfigManager

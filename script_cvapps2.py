@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+''' 
+Script that tests the experimental module cvapps2 
+'''
+
 from cvapps2.confmanager import ConfigManager
 from cvapps2 import findcbc
 from cvapps2 import calibration_experiment as calexp

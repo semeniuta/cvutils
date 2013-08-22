@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 
+'''
+Script that merges two rectified images of chessboard and draws lines 
+that verify row-alignment of the images
+'''
+
 import cv2
 import os
 from cvfunctions import output, images, chessboard
 import numpy as np
+from cvapplications.confmanager import ConfigManager
 
-img_dir = r'D:\Dropbox\SINTEF\DATA\STEREO\raufoss_set2_10x3000_2013-08-06_121902\rectified_images'
+cm = ConfigManager()
+
+stereo_dir = cm.get_pyramid_parameters()['stereo_dir']
+img_dir = os.path.join(stereo_dir, 'rectified_images')
 pattern_size = (10, 8)
 
 n = 1   
