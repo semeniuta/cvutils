@@ -99,6 +99,6 @@ def compute_rectification_transforms(intrinsics_left, intrinsics_right, image_si
     res = cv2.stereoRectify(camera_matrix_left, dist_coefs_left, camera_matrix_right, dist_coefs_right, image_size, rotation_matrix, translation_vector)
     return res
     
-    
+
     
     

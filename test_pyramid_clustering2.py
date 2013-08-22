@@ -2,7 +2,7 @@
 
 from cvapplications.confmanager import ConfigManager
 from cvfunctions import images, output
-from cvfunctions import pyramid2 as pyramid
+from cvfunctions import pyramid
 import random
 from matplotlib import pyplot as plt
 import numpy as np

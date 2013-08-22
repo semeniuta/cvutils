@@ -2,13 +2,12 @@
 
 import cv2
 from cvapplications.confmanager import ConfigManager
-from cvfunctions import images, pyramid, transform, output
+from cvfunctions import images, pyramid, transform
 from cvclasses.stereovisionsystem import StereoVisionSystem
 from cvclasses.camera import Camera
 import os
-import random
-from matplotlib import pyplot as plt
 import numpy as np
+from cvfunctions import geometry
 
 cm = ConfigManager()
 
@@ -43,24 +42,25 @@ two_images = [im1, im2]
 
 points = []
 for im in two_images:
-    dots, im_t = pyramid.detect_dots(im)
-    pyramid.display_dots(im, dots)
-    points.append([])
+    blobs, im_t = pyramid.detect_dots(im)
+    pyramid.display_dots(im, blobs)
+    pyramid.display_dots_numbers(blobs)
+    points.append(pyramid.extract_points(blobs))
+    
+indices_1 = [1, 25, 10, 15, 26, 8, 3]
+indices_2 = [2, 33, 13, 19, 34, 11, 5]
 
-    num = 0
-    for d in dots:
-        x, y = d.pt
-        points[-1].append(np.array([x, y]))
-        plt.text(x, y, num, color='w')
-        num += 1
-        
-interest_points_1 = np.transpose(np.array([points[0][1], points[0][25], points[0][10], points[0][15]]))
-interest_points_2 = np.transpose(np.array([points[1][2], points[1][33], points[1][13], points[1][19]]))
+interest_points_1 = np.transpose(np.array([points[0][ind] for ind in indices_1]))
+interest_points_2 = np.transpose(np.array([points[1][ind] for ind in indices_2]))
 
 res = cv2.triangulatePoints(svs.P1, svs.P2, interest_points_1, interest_points_2)
 
 res = np.transpose(res)
 res_real = np.array([[row[i]/row[3] for i in range(3)] for row in res])
-        
 
-
+d1 = geometry.compute_distance(*[res_real[i] for i in (2, 3)])
+d2 = geometry.compute_distance(*[res_real[i] for i in (0, 1)])
+d3 = geometry.compute_distance(*[res_real[i] for i in (1, 4)])        
+d4 = geometry.compute_distance(*[res_real[i] for i in (2, 5)])        
+h1 = res_real[2][2] - res_real[5][2]
+h2 = res_real[0][2] - res_real[6][2]
