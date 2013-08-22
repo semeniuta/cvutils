@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+'''
+Script that measures distances in real-world 3D coordinates
+using the pyramid images
+'''
+
 import cv2
 from cvapplications.confmanager import ConfigManager
 from cvfunctions import images, pyramid, transform
@@ -8,6 +13,7 @@ from cvclasses.camera import Camera
 import os
 import numpy as np
 from cvfunctions import geometry
+import matplotlib.pyplot as plt
 
 cm = ConfigManager()
 
@@ -41,26 +47,42 @@ im2 = res[1][ind]
 two_images = [im1, im2]
 
 points = []
+blobs_list = []
 for im in two_images:
     blobs, im_t = pyramid.detect_dots(im)
-    pyramid.display_dots(im, blobs)
-    pyramid.display_dots_numbers(blobs)
+    blobs_list.append(blobs)
     points.append(pyramid.extract_points(blobs))
     
-indices_1 = [1, 25, 10, 15, 26, 8, 3]
-indices_2 = [2, 33, 13, 19, 34, 11, 5]
+indices = {1:2, 25:33, 10:13, 15:19, 26:34, 8:11, 3:5, 12:15, 13:17, 24:31, 0:1, 2:4, 22:28, 19:26, 21:27, 18:24, 7:10, 4:7, 9:12, 6:9, 14:18, 20:25}
 
-interest_points_1 = np.transpose(np.array([points[0][ind] for ind in indices_1]))
-interest_points_2 = np.transpose(np.array([points[1][ind] for ind in indices_2]))
+interest_points_1 = np.transpose(np.array([points[0][i1] for i1, i2 in indices.iteritems()]))
+interest_points_2 = np.transpose(np.array([points[1][i2] for i1, i2 in indices.iteritems()]))
 
 res = cv2.triangulatePoints(svs.P1, svs.P2, interest_points_1, interest_points_2)
 
 res = np.transpose(res)
 res_real = np.array([[row[i]/row[3] for i in range(3)] for row in res])
 
-d1 = geometry.compute_distance(*[res_real[i] for i in (2, 3)])
-d2 = geometry.compute_distance(*[res_real[i] for i in (0, 1)])
-d3 = geometry.compute_distance(*[res_real[i] for i in (1, 4)])        
-d4 = geometry.compute_distance(*[res_real[i] for i in (2, 5)])        
-h1 = res_real[2][2] - res_real[5][2]
-h2 = res_real[0][2] - res_real[6][2]
+i1_list = list(indices.iterkeys())
+res_dict = {i1_list[i]: res_real[i] for i in range(len(i1_list))}
+
+dist = lambda a, b: geometry.compute_distance(*[res_dict[i] for i in (a, b)])
+
+segments = [(15, 10), (1, 25), (25, 26), (10, 8), (1, 3), (12, 13), (26, 24), (0, 2), (22, 19), (21, 18), (7, 4), (22, 24), (9, 6), (14, 20)]
+d = [dist(a, b) for a, b in segments]
+
+pixel_dict_1 = {i1_list[i]: np.transpose(interest_points_1)[i] for i in range(len(i1_list))}
+pixel_dict_2 = {i1_list[i]: np.transpose(interest_points_2)[i] for i in range(len(i1_list))}
+pd = [pixel_dict_1, pixel_dict_2]
+for i in range(2):
+    pyramid.display_dots(two_images[i], blobs_list[i])
+    pyramid.display_dots_numbers(blobs_list[i])
+    for segm_ind in range(len(segments)):
+        a, b = segments[segm_ind]
+        p1 = pd[i][a]
+        p2 = pd[i][b]
+        x = [p1[0], p2[0]]
+        y = [p1[1], p2[1]]
+        plt.plot(x, y, 'c')
+        center = geometry.compute_segment_center(p1, p2)
+        plt.text(center[0], center[1], '%.2f' % d[segm_ind], color='#ffff99')
