@@ -4,8 +4,8 @@ from ConfigParser import ConfigParser
 import os
 from cvclasses.imageset import CalibrationImageSet
 
-SYSTEM_CONFIG_FILE = r'conf.ini'
-IMAGESETS_CONFIG_FILE = r'imagesets.ini'
+SYSTEM_CONFIG_FILE = r'conf_system.ini'
+IMAGESETS_CONFIG_FILE = r'conf_imagesets.ini'
 
 class ConfigManager:
     def __init__(self):        

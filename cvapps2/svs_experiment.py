@@ -33,13 +33,11 @@ def conduct_svs_experiment(images_left, images_right, corners_left, corners_righ
 
 def get_svs(images_left, images_right, corners_left, corners_right, intrinsics_left, intrinsics_right, pattern_size, square_size):
             
-    print 'Performing stereo calibration'
     svs = StereoVisionSystem()    
     res = sv.calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, corners_left, corners_right)
-    print 'Calibration error: %f' % res[0]
+    print '%.3f' % res[0]    
     svs.set_calibration_parameters(res)
         
-    print 'Performing stereo rectification'
     image_size = images.get_image_size(images_left[0])
     rect_res = sv.compute_rectification_transforms(intrinsics_left, intrinsics_right, image_size, svs.R, svs.T)
     svs.set_rectification_transforms(rect_res)    

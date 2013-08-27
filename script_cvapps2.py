@@ -20,7 +20,7 @@ imageset_right = cm.get_chessboard_imageset('raufoss_set2_right')
 ''' VARIABLES '''
 findcbc_flags = findcbc.flags_sets['adtresh_or_filquads']
 sample_size = 12
-nsamples = 5
+nsamples = 15
 
 ''' Find chessboard corners and filter out the results '''
 res = findcbc.open_images_and_find_corners(imageset_left, imageset_right, findcbc_flags)

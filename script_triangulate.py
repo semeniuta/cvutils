@@ -68,7 +68,7 @@ res_dict = {i1_list[i]: res_real[i] for i in range(len(i1_list))}
 
 dist = lambda a, b: geometry.compute_distance(*[res_dict[i] for i in (a, b)])
 
-segments = [(15, 10), (1, 25), (25, 26), (10, 8), (1, 3), (12, 13), (26, 24), (0, 2), (22, 19), (21, 18), (7, 4), (22, 24), (9, 6), (14, 20)]
+segments = [(15, 10), (1, 25), (25, 26), (10, 8), (1, 3), (12, 13), (26, 24), (0, 2), (22, 19), (21, 18), (7, 4), (22, 24), (9, 6), (14, 20), (15, 14), (10, 9), (14, 9)]
 d = [dist(a, b) for a, b in segments]
 
 pixel_dict_1 = {i1_list[i]: np.transpose(interest_points_1)[i] for i in range(len(i1_list))}
@@ -85,4 +85,4 @@ for i in range(2):
         y = [p1[1], p2[1]]
         plt.plot(x, y, 'c')
         center = geometry.compute_segment_center(p1, p2)
-        plt.text(center[0], center[1], '%.2f' % d[segm_ind], color='#ffff99')
+        plt.text(center[0], center[1], '%.3f' % d[segm_ind], color='#ffff99')
