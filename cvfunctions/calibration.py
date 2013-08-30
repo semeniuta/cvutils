@@ -118,4 +118,5 @@ def get_calibration_results_as_a_tuple(res):
     fx, fy, cx, cy = get_camera_intrinsic_parameters(camera_matrix)
     k1, k2, p1, p2, k3 = dist_coefs[0]
     
-    return (rms, fx, fy, cx, cy, k1, k2, p1, p2, k3)      
+    return (rms, fx, fy, cx, cy, k1, k2, p1, p2, k3) 
+    

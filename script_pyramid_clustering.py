@@ -57,50 +57,7 @@ def plot_line(xy, a, b, color):
     y = [xy[a][1], xy[b][1]]
     plt.plot(x, y, color)
 
-if __name__ == '__main__':
-    
-    DISP = False    
-    
-    im = images1[1]
-        
-    blobs, im_t = pyramid.detect_dots(im)
-        
-    lines_df = pyramid.get_lines(blobs)
-    xy_lists = pyramid.get_xy(blobs)    
-    xy = pyramid.xy_lists_to_matrix(*xy_lists)
-    
-    lines_df_sorted = lines_df.sort(columns=['dist'])
-
-#    lines_df_sorted_b = lines_df_sorted.sort(columns=['b'])
-#    
-#    ab = get_ab(lines_df_sorted_b)
-#    last_b = -1
-#    indices_to_retain = []    
-#    for i in range(len(ab)):
-#        a, b = ab[i]
-#        if b == last_b:
-#            continue
-#        else:
-#            last_b = b
-#            indices_to_retain.append(i)
-#            
-    #df = lines_df_sorted.loc[indices_to_retain, :]
-
-    df = lines_df_sorted.head(70)
-    
-    ab_good = get_ab(df)
-    output.plot_image(im)   
-    for a, b in ab_good:
-        plot_line(xy, a, b, 'r') 
-            
-    lineeq = get_lineeq(df)
-    ab = get_ab(df)
-    
-    data = lineeq        
-    
-    nclusters = 12
-    centroids, idx = kmeans_clustering(data, nclusters)
-    
+def chains(im, df):
     chains = pyramid.build_chains(df) 
     chains_f = []
     for c in chains:
@@ -126,6 +83,37 @@ if __name__ == '__main__':
             intercept_ratio = avg_intercepts[i] / avg_intercepts[j]
             if 0.5 < slope_ratio < 1.5 and 0.5 < intercept_ratio < 1.5:
                 print i, j, slope_ratio, intercept_ratio
+
+if __name__ == '__main__':
+    
+    DISP = False    
+    
+    im = images1[1]
+        
+    blobs, im_t = pyramid.detect_dots(im)
+        
+    lines_df = pyramid.get_lines(blobs)
+    xy_lists = pyramid.get_xy(blobs)    
+    xy = pyramid.xy_lists_to_matrix(*xy_lists)
+    
+    lines_df_sorted = lines_df.sort(columns=['dist'])
+
+    df = lines_df_sorted.head(70)
+    
+    ab_good = get_ab(df)
+    output.plot_image(im)   
+    for a, b in ab_good:
+        plot_line(xy, a, b, 'r') 
+            
+    lineeq = get_lineeq(df)
+    ab = get_ab(df)
+    
+    data = lineeq        
+    
+    nclusters = 12
+    centroids, idx = kmeans_clustering(data, nclusters)
+    
+    chains(im, df)
     
     if DISP: 
         

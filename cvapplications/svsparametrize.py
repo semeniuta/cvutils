@@ -30,11 +30,14 @@ def parametrize_stereo_vision_system(imagemasks, pattern_size, square_size, get_
         print "Reading cameras' intrinsic parameters"
         lr_intrinsics = unpickle_intrinsics()
     intrinsics_left, intrinsics_right = lr_intrinsics
-            
+                
     print 'Performing stereo calibration'
     svs = StereoVisionSystem()    
     res = sv.calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, corners_left, corners_right)
     print 'Calibration error: %f' % res[0]
+    
+    print res[5:]    
+    
     svs.set_calibration_parameters(res)
         
     print 'Performing stereo rectification'
