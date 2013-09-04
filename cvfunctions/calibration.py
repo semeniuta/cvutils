@@ -80,7 +80,11 @@ def get_pattern_points(pattern_size, square_size):
     return pattern_points
 
 def get_intrinsics(res):
-    return res[1:3]
+    '''
+    Returns a tuple containing camera matrix and an array of
+    distortion coefficients 
+    '''
+    return tuple(res[1:3])
 
 def get_intrinsics_as_a_tuple(res):
     ''' 

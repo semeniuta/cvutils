@@ -1,5 +1,17 @@
 # -*- coding: utf-8 -*-
 
+'''
+Configuration manager for SintefCV
+
+In the files where reading configuraion is needed, the usage of
+the configuration manager is the following:
+    
+    from cvapplications.confmanager import ConfigManager
+    cm = ConfigManager()
+
+@author: Oleksandr Semeniuta 
+'''
+
 from ConfigParser import ConfigParser
 import os
 from cvclasses.imageset import CalibrationImageSet

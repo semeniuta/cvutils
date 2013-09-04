@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+
+'''
+Module that implements the following camera calibration experiment:
+1. From the given image set N samples of size n are generated;
+2. Each sample of images is used to calibrate the camera;
+3. The results of calibration – fx, fy, cx, cy, k1, k2, p1, p2, k3 – 
+   form the respective distributions for further analysis.
+
+@author: Oleksandr Semeniuta 
+'''
+
 from cvfunctions import calibration
 from cvfunctions import chessboard
 from cvfunctions import output
@@ -8,6 +20,7 @@ import csv
 import time
 import sys
 import cv2
+import pandas
 
 def different_samples_experiment(images_mask, pattern_size, square_size, sample_size, nsamples, experiments_dir, experiment_name, special_flags=True):
     ''' 
@@ -20,7 +33,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     square_size -- size of a square edge on the chessboard
     data_file -- path to the pickle file for saving/restoring image processing data
     sample_size -- size of the samples taken for calibration
-    nsamples -- number of samples to be tested
+    nsamples -- number of samples taken for calibration
     experiments_dir -- directory in which the results of the experiment are to be saved
     experiment_name -- short string defining the name of current experiment
     special_flags -- TODo
@@ -119,3 +132,6 @@ def write_images_list_to_file(images_list, f):
         fname = images_list[i]        
         row = [i, fname]
         w.writerow(row)    
+
+def read_calib_data(data_dir):
+    return pandas.read_csv(os.path.join(data_dir, 'samples_calibration.csv'))  

@@ -1,5 +1,21 @@
 # -*- coding: utf-8 -*-
 
+''' 
+The fullcalib module contains the functions used for performing the full
+process of stereo vision system calibration:
+
+1. From two given image sets (from left and right cameras) N samples of size n
+   are generated;
+2. Each corresponding pair of samples is used to calibrate the cameras;
+3. Calibration results of the sample that gives the smallest calibration error
+   are chosen for further stereo vision system calibration
+4. Stereo vision system calibration and rectification transorm computation is
+   performed given the selected individual cameras' calibration results
+5. StereoVisionSystem and two Camera objects are created as the result
+
+@author: Oleksandr Semeniuta
+'''
+
 import os
 from cvfunctions import chessboard
 from cvfunctions import calibration
@@ -9,25 +25,21 @@ from cvclasses.stereovisionsystem import StereoVisionSystem
 from cvclasses.camera import Camera
 from generalfunctions import sampling
 
-def get_svs_and_cameras_objects(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags, calib_dir):
-    pickles = {name: os.path.join(calib_dir, name + '.pickle') for name in ('svs', 'cam1', 'cam2')}
-    if not os.path.exists(calib_dir):
-        os.makedirs(calib_dir)
-        svs, cam1, cam2  = calibrate(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags)
-        svs.pickle(pickles['svs'])
-        cam1.pickle(pickles['cam1'])
-        cam2.pickle(pickles['cam2'])
-    else:
-        svs = StereoVisionSystem()
-        cam1 = Camera()
-        cam2 = Camera()
-        svs.unpickle(pickles['svs'])
-        cam1.unpickle(pickles['cam1'])
-        cam2.unpickle(pickles['cam2'])
-        
-    return svs, cam1, cam2
-
 def calibrate(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags):
+    ''' 
+    Performs the full calibration process for stereo vison system. Returns 
+    a tuple containing StereoVisionSystem and two Camera objects
+
+    Arguments:
+    cb_set1 -- a cvclasses.imageset.CalibrationImageSet object representing 
+               a chessboard pattern imageset for the first camera
+    cb_set2 -- a cvclasses.imageset.CalibrationImageSet object representing 
+               a chessboard pattern imageset for the second camera
+    sample_size -- size of the samples taken for calibration
+    nsamples -- number of samples taken for calibration
+    findcbc_flags -- flags for calling the cv2.findCHessboardCorners function; 
+                     can be taken from cvfunctions.calibration.flags dictionary
+    '''
     
     pattern_size = cb_set1.pattern_size
     square_size = cb_set1.square_size
@@ -79,3 +91,43 @@ def calibrate(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags):
     cam2.set_intrinsics(intrinsics2)
     
     return svs, cam1, cam2    
+    
+def get_svs_and_cameras_objects(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags, calib_dir):
+    '''
+    Returns a tuple containing StereoVisionSystem and two Camera objects:
+    either by unpicking the files on the filesystem or by performing
+    calibration using the calibrate function of the same module.
+    
+    If the specified calibraion directory (calib_dir) exists on the filesystem,
+    the function will try to unpickle the needed data. Otherwise,
+    the calibration will be performed
+    
+    Arguments:
+    cb_set1 -- a cvclasses.imageset.CalibrationImageSet object representing 
+               a chessboard pattern imageset for the first camera
+    cb_set2 -- a cvclasses.imageset.CalibrationImageSet object representing 
+               a chessboard pattern imageset for the second camera
+    sample_size -- size of the samples taken for calibration
+    nsamples -- number of samples taken for calibration
+    findcbc_flags -- flags for calling the cv2.findCHessboardCorners function; 
+                     can be taken from cvfunctions.calibration.flags dictionary
+    calib_dir -- directory to save/load pickle files of calibration results
+    
+    '''    
+    
+    pickles = {name: os.path.join(calib_dir, name + '.pickle') for name in ('svs', 'cam1', 'cam2')}
+    if not os.path.exists(calib_dir):
+        os.makedirs(calib_dir)
+        svs, cam1, cam2  = calibrate(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags)
+        svs.pickle(pickles['svs'])
+        cam1.pickle(pickles['cam1'])
+        cam2.pickle(pickles['cam2'])
+    else:
+        svs = StereoVisionSystem()
+        cam1 = Camera()
+        cam2 = Camera()
+        svs.unpickle(pickles['svs'])
+        cam1.unpickle(pickles['cam1'])
+        cam2.unpickle(pickles['cam2'])
+        
+    return svs, cam1, cam2
