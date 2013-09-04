@@ -5,6 +5,11 @@ from cvfunctions import output
 from cvfunctions.images import open_images_from_mask
 from glob import glob
 
+flags = {
+    'default': cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_NORMALIZE_IMAGE, 
+    'at_or_fq': cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS    
+}
+
 def find_chessboard_corners(images, pattern_size, searchwin_size=5, findcbc_flags=None):
     ''' 
     Finds chessboard corners on each image from the specified list. 

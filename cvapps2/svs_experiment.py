@@ -23,8 +23,8 @@ def conduct_svs_experiment(images_left, images_right, corners_left, corners_righ
         row_left = intrinsics_data_left[i]
         row_right = intrinsics_data_right[i]
         
-        intrinsics_left = (calibration.get_camera_matrix(row_left[1:5]), row_left[5:])
-        intrinsics_right = (calibration.get_camera_matrix(row_right[1:5]), row_right[5:])
+        intrinsics_left = (calibration.get_camera_matrix_from_tuple(row_left[1:5]), row_left[5:])
+        intrinsics_right = (calibration.get_camera_matrix_from_tuple(row_right[1:5]), row_right[5:])
         
         svs = get_svs(images_left, images_right, corners_left, corners_right, intrinsics_left, intrinsics_right, pattern_size, square_size)
         svs_list.append(svs)

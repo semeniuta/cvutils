@@ -51,7 +51,8 @@ def display_dots(image, blobs):
     output.plot_points(x_list, y_list)
 
 def extract_points(blobs):    
-    points = [np.array([b.pt[0], b.pt[1]]) for b in blobs]
+    #points = [np.array([b.pt[0], b.pt[1]]) for b in blobs]
+    points = [([b.pt[0], b.pt[1]]) for b in blobs]
     return points
     
 def display_dots_numbers(blobs):

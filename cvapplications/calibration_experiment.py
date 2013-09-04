@@ -48,7 +48,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
     ''' Calibrate camera '''
     print 'Calibrating the camera (all images)'
     res = calibration.calibrate_camera(opened_images, pattern_size, square_size, chessboard_corners_results)    
-    res_table = [calibration.get_calibration_results_as_a_tuple(res)]     
+    res_table = [calibration.get_intrinsics_as_a_tuple(res)]     
     with open(os.path.join(results_dir, 'all_images_calibration.csv'), 'wb') as f:    
         write_calibration_results_to_file(res_table, f)
   
@@ -68,7 +68,7 @@ def different_samples_experiment(images_mask, pattern_size, square_size, sample_
         sample_corners = [chessboard_corners_results[el] for el in t]
         
         res = calibration.calibrate_camera(sample_images, pattern_size, square_size, sample_corners)
-        res_row = calibration.get_calibration_results_as_a_tuple(res)
+        res_row = calibration.get_intrinsics_as_a_tuple(res)
         res_table.append(res_row)
         
         sys.stdout.write('%d ' % sample_index)

@@ -48,7 +48,7 @@ def conduct_calibration_experiment(imageset, images, corners, samples, findcbc_f
         sample_corners = [corners[ind] for ind in s]
         
         res = calibration.calibrate_camera(sample_images, imageset.pattern_size, imageset.square_size, sample_corners)
-        res_row = calibration.get_calibration_results_as_a_tuple(res)
+        res_row = calibration.get_intrinsics_as_a_tuple(res)
         res_table.append(res_row)
         
         sys.stdout.write('%d ' % sample_index)

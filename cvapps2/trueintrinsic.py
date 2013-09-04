@@ -35,7 +35,7 @@ def find_true_intrinsics(data, nbins):
         ti = bins[max_freq_ind] + (bins[max_freq_ind + 1] - bins[max_freq_ind])/2
         ti_values.append(ti)
 
-    camera_matrix = calibration.get_camera_matrix(ti_values[:4])
+    camera_matrix = calibration.get_camera_matrix_from_tuple(ti_values[:4])
     dist_coefs = ti_values[4:]
     res = (camera_matrix, tuple(dist_coefs)) 
     
@@ -44,7 +44,7 @@ def find_true_intrinsics(data, nbins):
 #    cols = round_dataframe_columns(data, ndigits_list)
 #    modes = [sf.calc_mode(c) for c in cols[1:]]
 #    
-#    camera_matrix = calibration.get_camera_matrix(modes[:4])
+#    camera_matrix = calibration.get_camera_matrix_from_tuple(modes[:4])
 #    dist_coefs = modes[4:]
 #    
 #    colnames = [colname for colname, series in data.iteritems()]    
@@ -63,7 +63,7 @@ def expand_ti_tuple(ti_tuple):
     (fx, fy, cx, cy, k1, k2, p1, p2, k3)
     '''
     camera_matrix, dist_coefs = ti_tuple
-    matrix_as_a_tuple = calibration.get_camera_intrinsic_parameters(camera_matrix)
+    matrix_as_a_tuple = calibration.camera_matrix_to_tuple(camera_matrix)
     return matrix_as_a_tuple + dist_coefs
     
 def print_statistics(data):

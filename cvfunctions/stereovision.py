@@ -2,6 +2,7 @@
 from cvfunctions import calibration
 from cvfunctions import images
 import cv2
+import numpy as np
 
 def calibrate_stereo_vision_system(images_left, images_right, pattern_size, square_size, intrinsics_left, intrinsics_right, chessboard_corners_results_left, chessboard_corners_results_right):    
     ''' 
@@ -99,9 +100,14 @@ def compute_rectification_transforms(intrinsics_left, intrinsics_right, image_si
     res = cv2.stereoRectify(camera_matrix_left, dist_coefs_left, camera_matrix_right, dist_coefs_right, image_size, rotation_matrix, translation_vector)
     return res
     
-def triangulate():
-    pass
+def triangulate_points(p1, p2, points1, points2):
+    points1_matrix = np.transpose(np.array(points1))
+    points2_matrix = np.transpose(np.array(points2))
     
-
+    res = cv2.triangulatePoints(p1, p2, points1_matrix, points2_matrix)
+    res = np.transpose(res)
+    res_real = np.array([[row[i]/row[3] for i in range(3)] for row in res])
+    
+    return res_real
     
     

@@ -79,7 +79,22 @@ def get_pattern_points(pattern_size, square_size):
     pattern_points *= square_size
     return pattern_points
 
-def get_camera_intrinsic_parameters(camera_matrix):
+def get_intrinsics(res):
+    return res[1:3]
+
+def get_intrinsics_as_a_tuple(res):
+    ''' 
+    Returns a tuple of the following calibration results:
+    rms, fx, fy, cx, cy, k1, k2, p1, p2, k3    
+    '''
+    rms, camera_matrix, dist_coefs, rvecs, tvecs = res       
+    
+    fx, fy, cx, cy = camera_matrix_to_tuple(camera_matrix)
+    k1, k2, p1, p2, k3 = dist_coefs[0]
+    
+    return (rms, fx, fy, cx, cy, k1, k2, p1, p2, k3) 
+
+def camera_matrix_to_tuple(camera_matrix):
     '''
     Returns a tuple of camera intrinsic parameters 
     (based on the camera matrix privided) in the following order:
@@ -92,10 +107,10 @@ def get_camera_intrinsic_parameters(camera_matrix):
     
     return (fx, fy, cx, cy)
     
-def get_camera_matrix(params):
+def get_camera_matrix_from_tuple(params):
     '''
     Returns camera matrix based on given intrinsic parameters
-    of the camera: fx, fy, cx, cy (supplied as a sequence)
+    of the camera: fx, fy, cx, cy (supplied as a tuple or other sequence)
     '''
     
     fx, fy, cx, cy = params
@@ -107,16 +122,4 @@ def get_camera_matrix(params):
     cm[2, 2] = 1
     
     return cm
-    
-def get_calibration_results_as_a_tuple(res):
-    ''' 
-    Returns a tuple of the following calibration results:
-    rms, fx, fy, cx, cy, k1, k2, p1, p2, k3    
-    '''
-    rms, camera_matrix, dist_coefs, rvecs, tvecs = res       
-    
-    fx, fy, cx, cy = get_camera_intrinsic_parameters(camera_matrix)
-    k1, k2, p1, p2, k3 = dist_coefs[0]
-    
-    return (rms, fx, fy, cx, cy, k1, k2, p1, p2, k3) 
     
