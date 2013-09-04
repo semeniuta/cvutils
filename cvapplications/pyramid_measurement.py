@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cvfunctions import images
 from cvfunctions import pyramid
-from cvfunctions import transform
 from cvfunctions import geometry
 from cvfunctions import stereovision
 import matplotlib.pyplot as plt

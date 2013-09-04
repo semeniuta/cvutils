@@ -8,9 +8,6 @@ from cvfunctions import chessboard
 from cvfunctions import images
 from cvfunctions import pyramid
 from cvfunctions import transform
-from cvfunctions import geometry
-from cvfunctions import stereovision
-import matplotlib.pyplot as plt
 
 cm = ConfigManager()
 
@@ -36,15 +33,15 @@ def measure(mask1, mask2, cam1, cam2, indices, segments):
         points.append(pyramid.extract_points(blobs))
         
     points1, points2 = points      
-    d = pm.measure_distances(points1, points2, indices, segments, svs.P1, svs.P2)
     
+    d = pm.measure_distances(points1, points2, indices, segments, svs.P1, svs.P2)    
     pm.display_measurements(points1, points2, indices, segments, two_images, blobs_list, d)
 
 
 if __name__ == '__main__':
     
-    sample_size = 20
-    nsamples = 300
+    sample_size = 12
+    nsamples = 100
     findcbc_flags = chessboard.flags['at_or_fq']    
     
     indices = {1:2, 25:33, 10:13, 15:19, 26:34, 8:11, 3:5, 12:15, 13:17, 24:31, 0:1, 2:4, 22:28, 19:25, 21:27, 18:24, 7:10, 4:7, 9:12, 6:9, 14:18, 20:26, 23:30, 5:8, 16:21, 17:22}
