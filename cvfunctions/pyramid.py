@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import cv2
 from cvfunctions import output, geometry
+from cvfunctions import featuredetection as fd
 from matplotlib import pyplot as plt
 import numpy as np
 import math
 import pandas as pd
 
-def detect_dots(image, ndots=36, blur_window=0, iterate=True, max_threshold=25, thresh_decrement=0.1, max_iterations=100, min_circularity=0.8, max_circularity=1.2):
+def detect_dots2(image, ndots=36, blur_window=0, iterate=True, threshold=25, thresh_decrement=0.1, max_iterations=100, min_circularity=0.8, max_circularity=1.2):
     
     if not blur_window == 0:
         image = cv2.medianBlur(image, blur_window)
@@ -15,11 +16,32 @@ def detect_dots(image, ndots=36, blur_window=0, iterate=True, max_threshold=25, 
     if not iterate:
         max_iterations = 1
     
-    max_threshold += thresh_decrement   
+    threshold += thresh_decrement   
     i = 0
     while ndots_found != ndots and i < max_iterations:      
-        max_threshold -= thresh_decrement
-        retval, im_t = cv2.threshold(image, max_threshold, 256, cv2.THRESH_BINARY)
+        threshold -= thresh_decrement
+        im_t = fd.threshold_binary(image, threshold)
+        
+        blobs = fd.detect_circles_as_blobs(im_t, min_circularity, max_circularity)
+        ndots_found = len(blobs)
+        i += 1
+        
+    return blobs, im_t
+
+def detect_dots(image, ndots=36, blur_window=0, iterate=True, threshold=25, thresh_decrement=0.1, max_iterations=100, min_circularity=0.8, max_circularity=1.2):
+    
+    if not blur_window == 0:
+        image = cv2.medianBlur(image, blur_window)
+    
+    ndots_found = 0
+    if not iterate:
+        max_iterations = 1
+    
+    threshold += thresh_decrement   
+    i = 0
+    while ndots_found != ndots and i < max_iterations:      
+        threshold -= thresh_decrement
+        retval, im_t = cv2.threshold(image, threshold, 256, cv2.THRESH_BINARY)
         
         p = cv2.SimpleBlobDetector_Params()
         p.minCircularity = min_circularity
@@ -55,11 +77,17 @@ def extract_points(blobs):
     points = [([b.pt[0], b.pt[1]]) for b in blobs]
     return points
     
-def display_dots_numbers(blobs):
+def display_dots_numbers(blobs, display_sizes=False):
     num = 0
     for b in blobs:
         x, y = b.pt
-        plt.text(x, y, num, color='w')
+
+        if display_sizes:
+            text = '%d (%.2f)' % (num, b.size)
+        else:
+            text = num
+            
+        plt.text(x, y, text, color='w')
         num += 1
      
 def pyramid_is_turned_left(blobs):

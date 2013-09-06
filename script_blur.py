@@ -18,10 +18,11 @@ def test_blur(im):
     
     merged = images.merge_images(im, im_f)
     
-    dots, im_t = pyramid.detect_dots(merged, max_threshold=80, iterate=False)
+    dots, im_t = pyramid.detect_dots(merged, threshold=80, iterate=False)
     pyramid.display_dots(merged, dots)
     
 def test_hist(im1, im2):
+    plt.figure()    
     plt.subplot(2, 1, 1)
     plt.hist(im1.flatten(), 128)    
     plt.subplot(2, 1, 2)    
@@ -39,5 +40,6 @@ if __name__ == '__main__':
     im2 = images_list_phone[0]
 
     test_blur(im2)
+    test_hist(im1, im2)
 
 

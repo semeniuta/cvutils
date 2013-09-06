@@ -5,7 +5,6 @@ def plot_image(image, show_in_grayscale=True):
     '''
     Displays the image using Matplotlib figure
     '''    
-    plt.figure()
     imshow(image)
     if show_in_grayscale:
         gray()
@@ -18,7 +17,6 @@ def create_and_save_histogram(data, nbins, title, filename):
     save_current_figure(filename)
     
 def create_histogram(data, nbins, title):
-    plt.figure()    
     plt.hist(data, nbins)
     plt.title(title)
     
@@ -39,6 +37,14 @@ def plot_circles(circles, color='b'):
     fig = plt.gcf()
     for c in circle_objects:
         fig.gca().add_artist(c)
+        
+def plot_image_histogram(image, nbins=128):
+    plt.hist(image.flatten(), nbins)  
     
+def plot_several_image_histograms(images, names=None, nbins=128):    
+    nimages = len(images)
+    for i in range(nimages):
+        plt.subplot(nimages, 1, i+1)
+        plot_image_histogram(images[i], nbins)    
                 
     

@@ -14,11 +14,12 @@ set_phone = cm.get_imageset_full_mask('pyramid_withphone_2')
 set1 = cm.get_imageset_full_mask('pyramid_left')
 set2 = cm.get_imageset_full_mask('pyramid_right')
 
-print 'Opening images'
-images1 = images.open_images_from_mask(set1)
-images2 = images.open_images_from_mask(set2)
+current_set = set2
 
-for im in images1:
+print 'Opening images'
+images = images.open_images_from_mask(current_set)
+
+for im in images:
     
     print 'Finding dots'
     dots, im_t = pyramid.detect_dots(im)
