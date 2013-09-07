@@ -18,10 +18,14 @@ def threshold_adaptive(image, method_key='gaussian', maxval=256, block_size=3, c
     image_t = cv2.adaptiveThreshold(image, maxval, method, threshold_type, block_size, c_const)
     return image_t
     
-def detect_circles_as_blobs(image, min_circularity, max_circularity):
+def detect_circles_as_blobs(image):
+    '''
+    Finds circular blobs on pre-thresholded image using      
+    OpenCV's SimpleBlobDetector tool
+    '''
     p = cv2.SimpleBlobDetector_Params()
-    p.minCircularity = min_circularity
-    p.maxCircularity = max_circularity
+    p.minCircularity = 0.8
+    p.maxCircularity = 1.2
     p.filterByCircularity = True
     
     det = cv2.SimpleBlobDetector(p)
