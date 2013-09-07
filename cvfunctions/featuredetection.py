@@ -7,8 +7,9 @@ at_algorithms = {
     'gaussian': cv2.ADAPTIVE_THRESH_GAUSSIAN_C 
 }
 
-def threshold_binary(image, threshold, maxval=256):
-    retval, image_t = cv2.threshold(image, threshold, maxval, cv2.THRESH_BINARY)
+def threshold_binary(image, threshold, maxval=256, invert=False):
+    thresold_type = cv2.THRESH_BINARY if not invert else cv2.THRESH_BINARY_INV
+    retval, image_t = cv2.threshold(image, threshold, maxval, thresold_type)
     return image_t
     
 def threshold_adaptive(image, method_key='gaussian', maxval=256, block_size=3, c_const=0.25):

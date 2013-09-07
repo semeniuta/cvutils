@@ -23,6 +23,7 @@ for im in images:
     
     print 'Finding dots'
     dots, im_t = pyramid.detect_dots(im)
+    plt.figure()
     pyramid.display_dots(im, dots)
    
     num = 1
@@ -30,10 +31,6 @@ for im in images:
         x, y = d.pt
         plt.text(x, y, num, color='w')
         num += 1
-        
-    #pos = 'The pyramid is turned %s' % ('left' if pyramid.pyramid_is_turned_left(dots) else 'right')
-    #plt.text(50, 50, pos, color='c')    
-    
-    #pyramid.draw_extreme_points(dots)    
+         
  
     

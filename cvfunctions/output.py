@@ -16,9 +16,10 @@ def create_and_save_histogram(data, nbins, title, filename):
     create_histogram(data, nbins, title)
     save_current_figure(filename)
     
-def create_histogram(data, nbins, title):
+def create_histogram(data, nbins, title=None):
     plt.hist(data, nbins)
-    plt.title(title)
+    if not title == None:
+        plt.title(title)
     
 def save_current_figure(filename):
     plt.savefig(filename)
@@ -38,13 +39,13 @@ def plot_circles(circles, color='b'):
     for c in circle_objects:
         fig.gca().add_artist(c)
         
-def plot_image_histogram(image, nbins=128):
-    plt.hist(image.flatten(), nbins)  
+def plot_image_histogram(image, nbins=128, title=None):
+    create_histogram(image.flatten(), nbins, title)  
     
 def plot_several_image_histograms(images, names=None, nbins=128):    
     nimages = len(images)
     for i in range(nimages):
         plt.subplot(nimages, 1, i+1)
-        plot_image_histogram(images[i], nbins)    
+        plot_image_histogram(images[i], nbins, names[i])    
                 
     

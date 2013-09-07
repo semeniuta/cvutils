@@ -30,14 +30,13 @@ im2 = images_all[1][-1]
 imp = images_all[2][-1]
 
 images = (im1, im2, imp)
-thresholds = [25]
+threshold = 25
 for im in images:    
     
     plt.figure()
-    for i in range(len(thresholds)):
-        t = thresholds[i]
-        im_t, blobs = find_blobs(im, t)
-        display_pyramid_results(im_t, blobs)
+
+    im_t, blobs = find_blobs(im, threshold)
+    display_pyramid_results(im_t, blobs)
 
 plt.figure()    
 output.plot_several_image_histograms(images, ['im1', 'im2', 'imp'])

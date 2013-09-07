@@ -1,32 +1,10 @@
 # -*- coding: utf-8 -*-
 import cv2
 from cvfunctions import output, geometry
-from cvfunctions import featuredetection as fd
 from matplotlib import pyplot as plt
 import numpy as np
 import math
 import pandas as pd
-
-def detect_dots2(image, ndots=36, blur_window=0, iterate=True, threshold=25, thresh_decrement=0.1, max_iterations=100, min_circularity=0.8, max_circularity=1.2):
-    
-    if not blur_window == 0:
-        image = cv2.medianBlur(image, blur_window)
-    
-    ndots_found = 0
-    if not iterate:
-        max_iterations = 1
-    
-    threshold += thresh_decrement   
-    i = 0
-    while ndots_found != ndots and i < max_iterations:      
-        threshold -= thresh_decrement
-        im_t = fd.threshold_binary(image, threshold)
-        
-        blobs = fd.detect_circles_as_blobs(im_t, min_circularity, max_circularity)
-        ndots_found = len(blobs)
-        i += 1
-        
-    return blobs, im_t
 
 def detect_dots(image, ndots=36, blur_window=0, iterate=True, threshold=25, thresh_decrement=0.1, max_iterations=100, min_circularity=0.8, max_circularity=1.2):
     
@@ -73,7 +51,6 @@ def display_dots(image, blobs):
     output.plot_points(x_list, y_list)
 
 def extract_points(blobs):    
-    #points = [np.array([b.pt[0], b.pt[1]]) for b in blobs]
     points = [([b.pt[0], b.pt[1]]) for b in blobs]
     return points
     
