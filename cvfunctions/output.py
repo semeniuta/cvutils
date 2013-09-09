@@ -13,13 +13,15 @@ def create_and_save_histogram(data, nbins, title, filename):
     ''' 
     Saves the histogram for the given data under the specified filename    
     '''
-    create_histogram(data, nbins, title)
+    res = create_histogram(data, nbins, title)
     save_current_figure(filename)
+    return res
     
 def create_histogram(data, nbins, title=None):
-    plt.hist(data, nbins)
+    res = plt.hist(data, nbins)
     if not title == None:
         plt.title(title)
+    return res
     
 def save_current_figure(filename):
     plt.savefig(filename)
@@ -40,7 +42,8 @@ def plot_circles(circles, color='b'):
         fig.gca().add_artist(c)
         
 def plot_image_histogram(image, nbins=128, title=None):
-    create_histogram(image.flatten(), nbins, title)  
+    res = create_histogram(image.flatten(), nbins, title)  
+    return res
     
 def plot_several_image_histograms(images, names=None, nbins=128):    
     nimages = len(images)

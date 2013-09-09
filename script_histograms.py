@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
-''' Graylevel transofrm '''
+''' Scripts display histograms of a set of different images '''
 
 from cvapplications.confmanager import ConfigManager
-from cvfunctions import images, pyramid
-import cvfunctions.featuredetection as fd
-import cvfunctions.grayleveltransform as glt
-import matplotlib.pyplot as plt
-from cvfunctions import output
+from cvfunctions import output, images
 import os
 
 cm = ConfigManager()

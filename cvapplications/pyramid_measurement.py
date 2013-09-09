@@ -73,6 +73,7 @@ def display_measurements(points1, points2, indices, segments, images, blobs, dis
     pixel_dict_2 = {i1_list[i]: interest_points_2[i] for i in range(len(i1_list))}
     pd = [pixel_dict_1, pixel_dict_2]
     for i in range(2):
+        plt.figure()
         pyramid.display_dots(images[i], blobs[i])
         pyramid.display_dots_numbers(blobs[i])
         for segm_ind in range(len(segments)):

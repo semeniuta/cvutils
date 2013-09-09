@@ -3,6 +3,12 @@
 '''
 Script that measures distances in real-world 3D coordinates
 using the pyramid images
+
+This is the old version of file. It uses the precomputet cameras' 
+intrinsics and SVS parameters that are read from file.
+
+To do calibratio and measuremtns at the same time,
+use script_batch_calc.py
 '''
 
 import cv2
@@ -75,6 +81,7 @@ pixel_dict_1 = {i1_list[i]: np.transpose(interest_points_1)[i] for i in range(le
 pixel_dict_2 = {i1_list[i]: np.transpose(interest_points_2)[i] for i in range(len(i1_list))}
 pd = [pixel_dict_1, pixel_dict_2]
 for i in range(2):
+    plt.figure()
     pyramid.display_dots(two_images[i], blobs_list[i])
     pyramid.display_dots_numbers(blobs_list[i])
     for segm_ind in range(len(segments)):

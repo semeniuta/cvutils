@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import cv2
 from cvfunctions import output, geometry
-from matplotlib import pyplot as plt
+from cvfunctions import featuredetection as fd
 import numpy as np
 import math
 import pandas as pd
@@ -35,37 +35,14 @@ def detect_dots(image, ndots=36, blur_window=0, iterate=True, threshold=25, thre
     return blobs, im_t
     
 def display_dots(image, blobs):
-    x_list = []
-    y_list = []
-    size_list = []
-    for b in blobs:
-        x, y = b.pt
-        x_list.append(x)
-        y_list.append(y)
-        size_list.append(b.size)
-    
-    circles = [((x_list[i], y_list[i]), size_list[i]) for i in range(len(blobs))]
-    
-    output.plot_image(image)    
-    output.plot_circles(circles)
-    output.plot_points(x_list, y_list)
+    fd.display_blobs(image, blobs)
 
 def extract_points(blobs):    
     points = [([b.pt[0], b.pt[1]]) for b in blobs]
     return points
     
 def display_dots_numbers(blobs, display_sizes=False):
-    num = 0
-    for b in blobs:
-        x, y = b.pt
-
-        if display_sizes:
-            text = '%d (%.2f)' % (num, b.size)
-        else:
-            text = num
-            
-        plt.text(x, y, text, color='w')
-        num += 1
+    fd.display_blobs_numbers(blobs, display_sizes)
      
 def pyramid_is_turned_left(blobs):
     

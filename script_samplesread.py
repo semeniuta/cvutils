@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+''' 
+Script that demonstartes how samples are read 
+from CSV file    
+'''
+
 import os
 from generalfunctions import sampling
 from cvapplications.confmanager import ConfigManager

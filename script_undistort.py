@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+'''
+Script that computes camera intrinsics parameters
+and undistorts the input images
+'''
+
 from cvfunctions import images as im
 from cvfunctions import chessboard
 from cvfunctions import calibration
@@ -15,7 +20,7 @@ def test_undistort_images(images, intrinsics, save=True):
     images_undist = transform.undistort_images(images, intrinsics)
     
     if save == True:
-        timelabel = time.strftime('%Y-%m-%d_%H%M%S', time.localtime(time.time()))
+        timelabel = time.strftime('undistort_%Y-%m-%d_%H%M%S', time.localtime(time.time()))
         savedir = os.path.join(cm.get_root_directory(), timelabel)
         im.save_images_to_dir(images, savedir, '%d_0.jpg')
         im.save_images_to_dir(images_undist, savedir, '%d_1.jpg')
