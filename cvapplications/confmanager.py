@@ -21,11 +21,12 @@ SYSTEM_CONFIG_FILE = r'conf_system.ini'
 IMAGESETS_CONFIG_FILE = r'conf_imagesets.ini'
 
 class ConfigManager:
-    def __init__(self):        
+    def __init__(self, conf_dir='.'):
+
         self.imgconfig = ConfigParser()
-        self.imgconfig.read(IMAGESETS_CONFIG_FILE)
+        self.imgconfig.read(os.path.join(conf_dir, IMAGESETS_CONFIG_FILE))
         self.systemconfig = ConfigParser()
-        self.systemconfig.read(SYSTEM_CONFIG_FILE)
+        self.systemconfig.read(os.path.join(conf_dir, SYSTEM_CONFIG_FILE))
 
     def get_root_directory(self):
         return self.systemconfig.get('system', 'root_directory')        

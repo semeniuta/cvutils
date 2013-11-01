@@ -15,5 +15,6 @@ def create_directories():
     '''
     cm = ConfigManager()
     for key, d in cm.get_directories().iteritems():
+        print d
         if not os.path.exists(d):        
             os.makedirs(d)

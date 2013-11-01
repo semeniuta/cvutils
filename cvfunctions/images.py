@@ -23,7 +23,7 @@ def open_image(image_file, convert_option='L', return_as_array=True):
         return np.array(image)
     else:
         return image
-
+            
 def open_images_from_dir(directory):
     '''
     Open images from the specified directory and returns a list of pixel arrays

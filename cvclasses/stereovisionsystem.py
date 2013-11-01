@@ -64,3 +64,6 @@ class StereoVisionSystem:
         excel.write_matrix(self.Q, sheet, 15, 8, 'Q')
             
         wb.close()
+        
+    def __srr__(self):
+        pass

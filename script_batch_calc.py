@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import numpy as np
 from cvapplications.confmanager import ConfigManager
 from cvapplications import fullcalib
 from cvapplications import pyramid_measurement as pm
@@ -12,17 +13,18 @@ from cvfunctions import transform
 cm = ConfigManager()
 
 def measure(mask1, mask2, cam1, cam2, indices, segments):
+ 
     
     pyramid_images1 = images.open_images_from_mask(mask1)
     pyramid_images2 = images.open_images_from_mask(mask2)
-    
+        
     res = transform.undistort_and_rectify_images_stereo(pyramid_images1, pyramid_images2, cam1.intrinsics, cam2.intrinsics, svs.rotation_matrices, svs.projection_matrices)
     
     ind = 2
     
     im1 = res[0][ind]
     im2 = res[1][ind]
-    
+        
     two_images = [im1, im2]
     
     points = []
@@ -32,11 +34,14 @@ def measure(mask1, mask2, cam1, cam2, indices, segments):
         blobs_list.append(blobs)
         points.append(pyramid.extract_points(blobs))
         
-    points1, points2 = points      
+    points1, points2 = points    
+    
+    print len(points1), len(points2)
     
     d = pm.measure_distances(points1, points2, indices, segments, svs.P1, svs.P2)    
     pm.display_measurements(points1, points2, indices, segments, two_images, blobs_list, d)
 
+    return im1, im2, pyramid_images1[ind], pyramid_images2[ind]
 
 if __name__ == '__main__':
     
@@ -53,10 +58,22 @@ if __name__ == '__main__':
     pyramid_set1_mask = cm.get_imageset_full_mask('pyramid_left')
     pyramid_set2_mask = cm.get_imageset_full_mask('pyramid_right')
     
+    print pyramid_set1_mask
+    print pyramid_set2_mask
+    
     calib_dir = os.path.join(cm.get_directory('calibration'), 'batch')    
     
     svs, cam1, cam2 = fullcalib.get_svs_and_cameras_objects(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags, calib_dir)  
-    measure(pyramid_set1_mask, pyramid_set2_mask, cam1, cam2, indices, segments)
+    
+    print cam1.intrinsics
+    print cam2.intrinsics
+       
+    im1, im2, orig1, orig2 = measure(pyramid_set1_mask, pyramid_set2_mask, cam1, cam2, indices, segments)
+    
+    images.save_image(im1, 'rect1.jpg')
+    images.save_image(im2, 'rect2.jpg')
+    images.save_image(orig1, 'orig1.jpg')
+    images.save_image(orig2, 'orig2.jpg')
 
     
     

@@ -123,6 +123,7 @@ def get_svs_and_cameras_objects(cb_set1, cb_set2, sample_size, nsamples, findcbc
         cam1.pickle(pickles['cam1'])
         cam2.pickle(pickles['cam2'])
     else:
+        print 'Reading from %s' % calib_dir
         svs = StereoVisionSystem()
         cam1 = Camera()
         cam2 = Camera()
