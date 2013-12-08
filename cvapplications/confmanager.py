@@ -21,12 +21,20 @@ SYSTEM_CONFIG_FILE = r'conf_system.ini'
 IMAGESETS_CONFIG_FILE = r'conf_imagesets.ini'
 
 class ConfigManager:
-    def __init__(self, conf_dir='.'):
-
+    def __init__(self):
+        
         self.imgconfig = ConfigParser()
-        self.imgconfig.read(os.path.join(conf_dir, IMAGESETS_CONFIG_FILE))
+        self.imgconfig.read(os.path.join(IMAGESETS_CONFIG_FILE))
         self.systemconfig = ConfigParser()
-        self.systemconfig.read(os.path.join(conf_dir, SYSTEM_CONFIG_FILE))
+        self.systemconfig.read(os.path.join(SYSTEM_CONFIG_FILE))
+        
+        ''' 
+        Fix the location of root_directory - 
+        make its path absolute (it is assumed that in SYSTEM_CONFIG_FILE it
+        is specified in relation to the location of SYSTEM_CONFIG_FILE)
+        '''        
+        abs_path = os.path.abspath(self.get_root_directory())
+        self.systemconfig.set('system', 'root_directory', abs_path)
 
     def get_root_directory(self):
         return self.systemconfig.get('system', 'root_directory')        
@@ -70,6 +78,9 @@ class ConfigManager:
         res['num_of_samples'] = self.systemconfig.getint('calibration', 'num_of_samples')
         res['imageset'] = self.systemconfig.get('calibration', 'imageset')
         return res
+        
+    def get_variable(self, variable_name):
+        return self.systemconfig.get('variables', variable_name)
         
     def get_svs_parameters(self):
         res = {}

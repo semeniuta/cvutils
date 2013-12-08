@@ -7,7 +7,10 @@ import mimetypes
 from glob import glob
 import cv2
 
-def open_image(image_file, convert_option='L', return_as_array=True):
+def open_image(image_file):
+    return cv2.imread(image_file, flags=cv2.CV_LOAD_IMAGE_GRAYSCALE)
+
+def open_image_pil(image_file, convert_option='L', return_as_array=True):
     ''' 
     Opens an image file specified as a string
     

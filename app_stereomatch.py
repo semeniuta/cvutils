@@ -6,6 +6,7 @@ from cvapplications.svsparametrize import parametrize_stereo_vision_system
 from cvapplications.confmanager import ConfigManager
 
 def get_svs_object():
+    import os
     cm = ConfigManager()
     params = cm.get_svs_parameters()
     lr_imagesets = (cm.get_chessboard_imageset(params['imageset_left']), cm.get_chessboard_imageset(params['imageset_right']))

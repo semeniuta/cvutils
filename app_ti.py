@@ -57,7 +57,7 @@ if __name__ == '__main__':
     create_histograms = True
     nbins = 100
     
-    cm = ConfigManager(conf_dir='..')
+    cm = ConfigManager()
     left_dir, right_dir = cm.get_ti_dirs()    
     
     compute_ti(left_dir, right_dir, nbins, create_histograms)

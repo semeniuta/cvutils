@@ -18,6 +18,7 @@ def create_and_save_histogram(data, nbins, title, filename):
     return res
     
 def create_histogram(data, nbins, title=None):
+    plt.figure()    
     res = plt.hist(data, nbins)
     if not title == None:
         plt.title(title)

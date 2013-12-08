@@ -25,7 +25,7 @@ from cvclasses.stereovisionsystem import StereoVisionSystem
 from cvclasses.camera import Camera
 from generalfunctions import sampling
 
-def calibrate(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags):
+def calibrate_svs(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags):
     ''' 
     Performs the full calibration process for stereo vison system. Returns 
     a tuple containing StereoVisionSystem and two Camera objects
@@ -116,12 +116,15 @@ def get_svs_and_cameras_objects(cb_set1, cb_set2, sample_size, nsamples, findcbc
     '''    
     
     pickles = {name: os.path.join(calib_dir, name + '.pickle') for name in ('svs', 'cam1', 'cam2')}
+    txtfiles = {name: os.path.join(calib_dir, name + '.txt') for name in ('intrinsics1', 'intrinsics2')}
     if not os.path.exists(calib_dir):
         os.makedirs(calib_dir)
-        svs, cam1, cam2  = calibrate(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags)
+        svs, cam1, cam2  = calibrate_svs(cb_set1, cb_set2, sample_size, nsamples, findcbc_flags)
         svs.pickle(pickles['svs'])
         cam1.pickle(pickles['cam1'])
         cam2.pickle(pickles['cam2'])
+        cam1.save_to_txt(txtfiles['intrinsics1'])
+        cam2.save_to_txt(txtfiles['intrinsics2'])
     else:
         print 'Reading from %s' % calib_dir
         svs = StereoVisionSystem()
